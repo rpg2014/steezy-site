@@ -36,8 +36,8 @@ Set up aws-amplify/cli, and run amplify pull
 * Do you want your own user account (easier), or do you want a role you can assume from your personal account?
 
 ## Design
-navigation will be hamburger menu with list of pages, but also links between them
-Animations: https://github.com/vercel/next.js/tree/canary/examples/with-next-page-transitions
+* navigation will be hamburger menu? with list of pages, but also button links between them
+* page Animations: https://github.com/vercel/next.js/tree/canary/examples/with-next-page-transitions
 
 ### Pages Needed
 * Home Screen
