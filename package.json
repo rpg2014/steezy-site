@@ -3,12 +3,16 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
+    "build": "next build && next export",
+    "build-wasm": "wasm-pack build steezy-wasm ; jq '. + {type: \"module\", main: \"steezy-wasm.js\"} | del(.module)' steezy-wasm/pkg/package.json | sponge steezy-wasm/pkg/package.json",
+    "link-wasm": "cd steezy-wasm/pkg ; npm link ; cd - ; npm link steezy-wasm",
     "start": "next start",
     "lint": "next lint"
   },
   "dependencies": {
+    "@aws-amplify/datastore": "^3.7.5",
     "next": "12.0.9",
+    "next-pwa": "^5.4.4",
     "react": "17.0.2",
     "react-dom": "17.0.2"
   },

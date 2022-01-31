@@ -1,0 +1,61 @@
+type Season @model @auth(rules: [{allow: private, operations: [read]}, {allow: groups, groups: ["commissioners"], operations: [read, create, update, delete]}]) {
+  id: ID!
+  startDate: AWSDate!
+  endDate: AWSDate!
+  EarnedRules: [EarnedPoint] @hasMany(indexName: "bySeason", fields: ["id"])
+}
+
+type EarnedPoint @model @auth(rules: [{allow: private, operations: [read]}, {allow: owner}]) {
+  id: ID!
+  riderID: ID! @index(name: "byRider")
+  ruleID: ID! @index(name: "byRule")
+  date: AWSDate!
+  seasonID: ID! @index(name: "bySeason")
+}
+
+enum ScaleType {
+  MULTIPLY
+  ADDITION
+}
+
+enum Period {
+  SEASONLY
+  MONTHLY
+  WEEKLY
+  DAILY
+  ANYTIME
+}
+
+enum RiderLevels {
+  DOUBLEBLACK
+  BLACK
+  BLUE
+  GREEN
+}
+
+type RuleScaling @model @auth(rules: [{allow: groups, groups: ["commissioners"], operations: [read, create, update, delete]}, {allow: private, operations: [read]}]) {
+  id: ID!
+  scaleType: ScaleType!
+  green: Float!
+  blue: Float!
+  black: Float!
+  doubleBlack: Float!
+}
+
+type Rider @model @auth(rules: [{allow: groups, groups: ["commissioners"], operations: [read, create, update, delete]}, {allow: owner}, {allow: private, operations: [read, create]}]) {
+  id: ID!
+  name: String!
+  riderLevel: RiderLevels!
+  earnedPoints: [EarnedPoint] @hasMany(indexName: "byRider", fields: ["id"])
+}
+
+type Rule @model @auth(rules: [{allow: private, operations: [read]}, {allow: groups, groups: ["commissioners"], operations: [read, create, update, delete]}]) {
+  id: ID!
+  name: String!
+  description: String!
+  period: Period!
+  basePoints: Int!
+  earnedPoints: [EarnedPoint] @hasMany(indexName: "byRule", fields: ["id"])
+  RuleScaling: RuleScaling! @hasOne
+}
+ 

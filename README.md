@@ -27,8 +27,59 @@ To learn more about Next.js, take a look at the following resources:
 
 You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
 
-## Deploy on Vercel
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+# Dev setup
+Set up aws-amplify/cli, and run amplify pull
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+## Collaberation
+### AWS
+* Do you want your own user account (easier), or do you want a role you can assume from your personal account?
+
+## Design
+navigation will be hamburger menu with list of pages, but also links between them
+Animations: https://github.com/vercel/next.js/tree/canary/examples/with-next-page-transitions
+
+### Pages Needed
+* Home Screen
+    * Buttons for Signup / login, add points, list of rules, scoreboard, if commisiner, add rule
+* Sign up 
+    * Page for signup
+    * https://docs.amplify.aws/lib/auth/emailpassword/q/platform/js/
+
+* Add points
+    * Double list of rules? 
+    * Date per rule in list, or one date overall?
+* Scoreboard
+    * Default show list of riders with both season and monthly points
+        * allow sorting
+    * have search bar to filter,
+    * allow clicking into user 
+        * expand row to list of earned rules
+            * rules are row with points.  
+        * date ranges to filter, and monthly and season options
+* Rules List
+    * List of entire rules, with description
+    * Shows attached rule scaling
+* login popover
+
+### Hooks
+* useRiderScore
+    * Inputs 
+        * riderId
+        * StartDate endDate or Season
+    * Returns score , null, error?
+    * will be a caching + interface layer for the rust wasm function
+    * caching
+        * Javascript map or react.useMemo
+
+* useRider 
+    * No input return all
+    * id/s, return those ids
+    * have datastore layer underneath that does the querying.  hook is thin layer.  
+* useRules
+    * same as above
+## Calculating total score
+* WASM rust function that takes a user/s and their earned points (or selection of), and a date range / season id, and returns the score for the time period.  Needs to be fast, will prob want caching at the javascript layer (faster than going to wasm)
+* Tutorial
+    * https://rustwasm.github.io/book/
+* wasm will need a new git package, maybe inbedded in here, for rust code.  then upload built js package to url 
