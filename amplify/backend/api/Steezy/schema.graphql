@@ -3,6 +3,7 @@ type Season @model @auth(rules: [{allow: private, operations: [read]}, {allow: g
   startDate: AWSDate!
   endDate: AWSDate!
   EarnedRules: [EarnedPoint] @hasMany(indexName: "bySeason", fields: ["id"])
+  name: String!
 }
 
 type EarnedPoint @model @auth(rules: [{allow: private, operations: [read]}, {allow: owner}]) {
@@ -47,6 +48,7 @@ type Rider @model @auth(rules: [{allow: groups, groups: ["commissioners"], opera
   name: String!
   riderLevel: RiderLevels!
   earnedPoints: [EarnedPoint] @hasMany(indexName: "byRider", fields: ["id"])
+  cognitoId: String!
 }
 
 type Rule @model @auth(rules: [{allow: private, operations: [read]}, {allow: groups, groups: ["commissioners"], operations: [read, create, update, delete]}]) {

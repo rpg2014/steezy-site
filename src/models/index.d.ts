@@ -47,6 +47,7 @@ export declare class Season {
   readonly startDate: string;
   readonly endDate: string;
   readonly EarnedRules?: (EarnedPoint | null)[];
+  readonly name: string;
   readonly createdAt?: string;
   readonly updatedAt?: string;
   constructor(init: ModelInit<Season, SeasonMetaData>);
@@ -83,6 +84,7 @@ export declare class Rider {
   readonly name: string;
   readonly riderLevel: RiderLevels | keyof typeof RiderLevels;
   readonly earnedPoints?: (EarnedPoint | null)[];
+  readonly cognitoId: string;
   readonly createdAt?: string;
   readonly updatedAt?: string;
   constructor(init: ModelInit<Rider, RiderMetaData>);

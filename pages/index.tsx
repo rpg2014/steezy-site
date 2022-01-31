@@ -1,9 +1,28 @@
+import Auth from '@aws-amplify/auth'
+import { DataStore } from 'aws-amplify'
 import type { NextPage } from 'next'
 import Head from 'next/head'
 import Link from 'next/link'
+import { useEffect } from 'react'
+import { Rider } from '../src/models'
 import styles from '../styles/Home.module.css'
 
 const Home: NextPage = () => {
+
+    useEffect(()=> {
+        Auth.currentAuthenticatedUser()
+        .then(({attributes}) => {
+            console.log("user; ")
+            console.log(attributes)
+            return attributes.sub
+        }).then((id)=> {
+            console.log(`id: ${id} `)
+            return DataStore.query(Rider, c => c.cognitoId("eq",id))
+        }).then((rider)=> {
+            console.log("rider")
+            console.log(rider)
+        }).catch(console.error)
+    },[])
   return (
     <div className={styles.container}>
       <Head>

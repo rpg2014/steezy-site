@@ -38,6 +38,13 @@ export const schema = {
                         "associatedWith": "seasonID"
                     }
                 },
+                "name": {
+                    "name": "name",
+                    "isArray": false,
+                    "type": "String",
+                    "isRequired": true,
+                    "attributes": []
+                },
                 "createdAt": {
                     "name": "createdAt",
                     "isArray": false,
@@ -347,6 +354,13 @@ export const schema = {
                         "associatedWith": "riderID"
                     }
                 },
+                "cognitoId": {
+                    "name": "cognitoId",
+                    "isArray": false,
+                    "type": "String",
+                    "isRequired": true,
+                    "attributes": []
+                },
                 "createdAt": {
                     "name": "createdAt",
                     "isArray": false,
@@ -571,5 +585,5 @@ export const schema = {
         }
     },
     "nonModels": {},
-    "version": "8d02229a264c27ef4d84a376e1cb3618"
+    "version": "aa3d82ab297ec3bb39ebf527156ce26d"
 };

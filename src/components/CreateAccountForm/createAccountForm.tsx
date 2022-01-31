@@ -27,6 +27,7 @@ export const CreateAccountForm = () => {
     const [flowState, setFlowState] = useState<FlowStates>('CREATE_ACCOUNT')
     const [formState, setFormState] = useState<FormData>({name: "", email: "", password: "", verificationCode: '' , riderLevel: RiderLevels.GREEN})
     const [deliveredToEmail, setDeliveredToEmail] = useState("");
+    const [userSub, setUserSub] = useState("");
     const [error, setError] = useState<Error>();
     
 
@@ -41,6 +42,7 @@ export const CreateAccountForm = () => {
             console.log(user)
             setDeliveredToEmail(user.codeDeliveryDetails.Destination)
             setFlowState("CONFIRM_EMAIL")
+            setUserSub(user.userSub)
         })
         .catch(setError);   
     }
@@ -48,19 +50,26 @@ export const CreateAccountForm = () => {
     const onConfirmEmail = () => {
         Auth.confirmSignUp(formState.email, formState.verificationCode)
         .then(() => {
+            console.log("Attempting login")
             return Auth.signIn(formState.email, formState.password)
-        })
-        .then(() => {
-            return DataStore.save(
-                new Rider({
-                  name: formState.name,
-                  riderLevel: formState.riderLevel,
-                })
-              );
         })
         .then(()=> {
             setFlowState("DONE")
         })
+        .then(() => {
+            console.log("Creating Rider in datastore")
+            return DataStore.save(
+                new Rider({
+                  name: formState.name,
+                  riderLevel: formState.riderLevel,
+                  cognitoId: userSub
+                })
+              );
+        }).then((rider)=>{
+            console.log("rider created")
+            console.log(rider)
+        })
+       
         .catch(setError);   
     }
 

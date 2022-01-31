@@ -13,8 +13,15 @@ Amplify.configure(awsconfig);
 declare global {
     interface Window {
         clearDataStore:any;
+        startDataStore:any;
+        signOut:any;
     }
 }
+DataStore.start().catch(() => {
+    DataStore.clear().then(() => {
+      DataStore.start();
+    });
+  });
 
 
 function MyApp({ Component, pageProps }: AppProps) {
@@ -23,6 +30,12 @@ function MyApp({ Component, pageProps }: AppProps) {
     useEffect(() => {
         window.clearDataStore = () => {
             DataStore.clear();
+        }
+        window.startDataStore= () => {
+            DataStore.start();
+        }
+        window.signOut = () => {
+            Auth.signOut();
         }
     },[])
     return <>
