@@ -42,8 +42,10 @@ Set up aws-amplify/cli, and run amplify pull
 ### Pages Needed
 * Home Screen
     * Buttons for Signup / login, add points, list of rules, scoreboard, if commisiner, add rule
-* Sign up 
+* Create Account
     * Page for signup
+    * will create Cognito user + user in datastore.  
+    * path: `/create-account`
     * https://docs.amplify.aws/lib/auth/emailpassword/q/platform/js/
 
 * Add points

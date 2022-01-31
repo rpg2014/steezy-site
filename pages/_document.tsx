@@ -10,6 +10,8 @@ class MyDocument extends Document {
     return (
       <Html>
         <Head >
+        <link rel="preconnect" href="https://fonts.googleapis.com"/>
+        <link href="https://fonts.googleapis.com/css2?family=Lato&display=swap" rel="stylesheet"/> 
         <meta name='application-name' content='PWA App' />
           <meta name="description" content="Description" />
           <meta name="keywords" content="Keywords" />

@@ -1,6 +1,10 @@
 const withPWA = require('next-pwa')
+const path = require('path')
 const nextConfig = {
     reactStrictMode: true,
+    sassOptions: {
+        // includePaths: [path.join(__dirname, 'styles')],
+      },
     webpack(config, { isServer, dev }) {
         config.experiments = {
           asyncWebAssembly: true,

@@ -8,24 +8,25 @@ declare global {
 }
 
 export const  useSetupServiceWorker  = () => {
+    const logEvent = (event: {type: string}) =>{
+        console.log(`[ServiceWorker] ${event.type} event triggered.`)
+        console.log(event)
+    }
     useEffect(() => {
         if (typeof window !== 'undefined' && 'serviceWorker' in navigator && window.workbox !== undefined) {
           const wb = window.workbox
           // add event listeners to handle any of PWA lifecycle event
           // https://developers.google.com/web/tools/workbox/reference-docs/latest/module-workbox-window.Workbox#events
           wb.addEventListener('installed', (event: { type: any }) => {
-            console.log(`Event ${event.type} is triggered.`)
-            console.log(event)
+            logEvent(event);
           })
     
           wb.addEventListener('controlling', (event: { type: any }) => {
-            console.log(`Event ${event.type} is triggered.`)
-            console.log(event)
+            logEvent(event);
           })
     
           wb.addEventListener('activated', (event: { type: any }) => {
-            console.log(`Event ${event.type} is triggered.`)
-            console.log(event)
+            logEvent(event);
           })
     
           // A common UX pattern for progressive web apps is to show a banner when a service worker has updated and waiting to install.
@@ -44,7 +45,7 @@ export const  useSetupServiceWorker  = () => {
               wb.messageSkipWaiting()
             } else {
               console.log(
-                'User rejected to reload the web app, keep using old version. New version will be automatically load when user open the app next time.'
+                '[Service Worker] User rejected to reload the web app, keep using old version. New version will be automatically load when user open the app next time.'
               )
             }
           }
