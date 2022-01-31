@@ -97,7 +97,7 @@ export const CreateAccountForm = () => {
               </div>
               <p className={`${styles.text} lead`}>Return home to login</p>
               <div className={styles.interactionContainer}>
-            <Link href='/'><button className={styles.returnHome}>Return Home</button></Link>
+            <Link passHref href='/'><button className={styles.returnHome}>Return Home</button></Link>
             </div>
             </div>
         )

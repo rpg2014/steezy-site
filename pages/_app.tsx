@@ -17,11 +17,6 @@ declare global {
         signOut:any;
     }
 }
-DataStore.start().catch(() => {
-    DataStore.clear().then(() => {
-      DataStore.start();
-    });
-  });
 
 
 function MyApp({ Component, pageProps }: AppProps) {

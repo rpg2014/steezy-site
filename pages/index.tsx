@@ -40,7 +40,7 @@ const Home: NextPage = () => {
           Get started by editing{' '}
           <code className={styles.code}>pages/index.tsx</code>
         </p>
-        <Link href='create-account'>
+        <Link passHref href='create-account'>
         <button>click me</button>
         </Link>
 

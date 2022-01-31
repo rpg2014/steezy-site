@@ -14,7 +14,7 @@ const CreateAccount: NextPage = () => {
             </Head>
 
             <div className={styles.container}>
-                <Link href="/"  ><span className={styles.backText}>Back </span></Link>
+                <Link href="/" passHref ><span className={styles.backText}>Back </span></Link>
                 <CreateAccountForm/>
             </div>
         </>
