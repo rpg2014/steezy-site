@@ -6,6 +6,7 @@ import { useSetupServiceWorker } from '../src/hooks/useSetupServiceWorker'
 
 import Amplify, { Auth, DataStore } from 'aws-amplify';
 import awsconfig from '../src/aws-exports';
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 
 Amplify.configure(awsconfig);

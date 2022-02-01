@@ -63,7 +63,7 @@ export const CreateAccountForm = () => {
                   name: formState.name,
                   riderLevel: formState.riderLevel,
                   cognitoId: userSub
-                })
+                  })
               );
         }).then((rider)=>{
             console.log("rider created")

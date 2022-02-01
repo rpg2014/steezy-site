@@ -1,28 +1,54 @@
 import Auth from '@aws-amplify/auth'
-import { DataStore } from 'aws-amplify'
+import { HubPayload } from '@aws-amplify/core'
+import { DataStore, Hub } from 'aws-amplify'
 import type { NextPage } from 'next'
 import Head from 'next/head'
 import Link from 'next/link'
-import { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
+import { Button } from 'react-bootstrap'
+import { SignInOutButton } from '../src/components/LoginComponents/LoginPopover'
+import { useAuth } from '../src/hooks/useCurrentUser'
 import { Rider } from '../src/models'
-import styles from '../styles/Home.module.css'
+import styles from '../styles/Home.module.scss'
 
 const Home: NextPage = () => {
 
+    const [riderData, setRiderData] = useState<Rider>();
+    
+    
+
+    const auth = useAuth();
+    const {cognitoId,name, email, signedIn} = auth;
+
+    //Sync listener for datastore, so we only query when we have fetched the data.  
+    const [syncReady, setSyncReady] = useState(false);
+    const listener = (data: {payload: HubPayload}) => {
+        if(data.payload.event === 'ready') {
+            console.log("sync ready")
+            setSyncReady(true)
+        }
+    } 
     useEffect(()=> {
-        Auth.currentAuthenticatedUser()
-        .then(({attributes}) => {
-            console.log("user; ")
-            console.log(attributes)
-            return attributes.sub
-        }).then((id)=> {
-            console.log(`id: ${id} `)
-            return DataStore.query(Rider, c => c.cognitoId("eq",id))
-        }).then((rider)=> {
-            console.log("rider")
-            console.log(rider)
-        }).catch(console.error)
-    },[])
+        Hub.listen('datastore', listener )
+        return () => Hub.remove('datastore', listener)
+    })
+
+
+    //Query to get the rider data for the currenly logged in user.  
+    useEffect(()=> {
+        if(signedIn && cognitoId && syncReady){
+            console.log(`Query for: ${cognitoId}`)   
+            DataStore.query(Rider,r=>r.cognitoId('eq', cognitoId))
+            .then(riders => {
+                console.log(`saving riders: ${JSON.stringify(riders)}`)
+                setRiderData(riders[0])
+
+            }).catch(console.error);
+        }else{
+            setRiderData(undefined)
+        }
+        
+    },[cognitoId, signedIn, syncReady])
   return (
     <div className={styles.container}>
       <Head>
@@ -32,22 +58,38 @@ const Home: NextPage = () => {
       </Head>
 
       <main className={styles.main}>
+          <div className={styles.AuthDiv}>
+          <SignInOutButton />
+          <Link passHref href='create-account' >
+            <Button variant='outline-info'className={styles.createAccountButton} >Create Account</Button>
+          </Link>
+          </div>
         <h1 className={styles.title}>
-          Welco me to <a href="https://nextjs.org">Next.js!</a>
+          Welcome to Steezy
         </h1>
 
-        <p className={styles.description}>
-          Get started by editing{' '}
-          <code className={styles.code}>pages/index.tsx</code>
-        </p>
-        <Link passHref href='create-account'>
-        <button>click me</button>
-        </Link>
-
+        <div className={styles.description}>
+            <p>
+          UserId is {cognitoId}
+          <br />
+          Name is {name}
+          <br />
+          email is {email}
+          </p>
+          <hr />
+          <div style={{fontSize: '20px'}}>
+          User Object is: 
+          <br />
+          <pre style={{textAlign: "left", backgroundColor:'black', color: "white", fontSize: "16px"}}>
+          {JSON.stringify(riderData,null,2)}
+          </pre>
+          </div>
+        </div>
+        
         <div className={styles.grid}>
           <a href="https://nextjs.org/docs" className={styles.card}>
             <h2>Documentation &rarr;</h2>
-            <p>Find in-de pth information about Next.js features and API.</p>
+            <p>Find in-depth information about Next.js features and API.</p>
           </a>
 
           <a href="https://nextjs.org/learn" className={styles.card}>
@@ -75,7 +117,7 @@ const Home: NextPage = () => {
         </div>
       </main>
 
-      <footer className={styles.footer}>
+      {/* <footer className={styles.footer}>
         <a
           href="https://vercel.com?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
           target="_blank"
@@ -86,7 +128,7 @@ const Home: NextPage = () => {
             <img src="/vercel.svg" alt="Vercel Logo" width={72} height={16} />
           </span>
         </a>
-      </footer>
+      </footer> */}
     </div>
   )
 }

@@ -33,7 +33,7 @@ export const InputGroup = (props: InputGroupProps ) => {
                     )}
                 </select>
                 : <input 
-                    className={`${styles.inputField} rounded border`} 
+                    className={`${styles.inputField} border`} 
                     type={props.type} 
                     name={props.name}
                     placeholder={props.placeholder? props.placeholder: props.label} 
