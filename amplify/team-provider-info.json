@@ -1,0 +1,20 @@
+{
+  "staging": {
+    "awscloudformation": {
+      "AuthRoleName": "amplify-steezy-staging-01201-authRole",
+      "UnauthRoleArn": "arn:aws:iam::593242635608:role/amplify-steezy-staging-01201-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::593242635608:role/amplify-steezy-staging-01201-authRole",
+      "Region": "us-west-2",
+      "DeploymentBucketName": "amplify-steezy-staging-01201-deployment",
+      "UnauthRoleName": "amplify-steezy-staging-01201-unauthRole",
+      "StackName": "amplify-steezy-staging-01201",
+      "StackId": "arn:aws:cloudformation:us-west-2:593242635608:stack/amplify-steezy-staging-01201/3f45e9c0-8161-11ec-bb4f-06eac495d68b",
+      "AmplifyAppId": "dtkl8sofyo170"
+    },
+    "categories": {
+      "auth": {
+        "Steezy": {}
+      }
+    }
+  }
+}
