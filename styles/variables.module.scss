@@ -3,6 +3,8 @@
 @import "~bootstrap/scss/mixins";
 
 
+$breakpoint: map-get($grid-breakpoints, md )
+
 // /* make the customizations */
 // $theme-colors: (
 //     "info": tomato,

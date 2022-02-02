@@ -1,11 +1,47 @@
+@import '/styles/variables.module.scss';
 .AuthDiv {
     display: flex;
     flex-direction: row;
     justify-content: right;
     width: 100%;
-    margin-bottom: 2rem;
-    margin-top: 1.5rem;
+    // margin-bottom: 2rem;
+    // margin-top: 1.5rem;
 }
 .createAccountButton {
     margin: 0 1rem;
+}
+
+
+.container {
+    margin: 1rem;
+    
+    
+    @media (max-width: $breakpoint) {
+        margin: 0;
+        width: 100vw;
+        // height: 4rem;
+    }
+    
+}
+.navBox {
+    border-radius: 0.25rem;
+    box-shadow: 3px 0px 3px black  ;
+    @media (max-width: $breakpoint) {
+       border-radius: 0;
+    }
+}
+
+.innerContainer {
+    margin: 0 auto;
+    padding: 0 0.5rem
+
+}
+.textLinksDiv {
+    align-items: center;
+    white-space: nowrap;
+    justify-content: left;
+
+    @media (max-width: $breakpoint) {
+        align-items: start;
+     }
 }

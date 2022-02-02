@@ -34,6 +34,17 @@ export const SignInOutButton = () => {
             progress: undefined,
         }
     );
+    const successPopover = () => toast.success("Logged in",
+    {
+        position: "bottom-center",
+        autoClose: 5000,
+        hideProgressBar: true,
+        closeOnClick: false,
+        pauseOnHover: false,
+        draggable: true,
+        progress: undefined,
+        theme: 'dark',
+    })
 
     
           
@@ -63,6 +74,7 @@ export const SignInOutButton = () => {
             setShow(false);
             setError(undefined);
             setIsLoggedIn(true);
+            successPopover();
             if(!syncReady) {
                 notify()
             }
@@ -108,7 +120,7 @@ export const SignInOutButton = () => {
                         <InputGroup label='Email' name='email' type={"email"} setFormState={setFormState} value={formState.email}  />
                         <InputGroup label='Password' name='password' type="password" setFormState={setFormState} value={formState.password} />
                         <div className={styles.loginButtonDiv}>
-                        <Link href='/forgot-password' >
+                        <Link passHref href='/forgot-password' >
                             <div className={styles.forgotPasswordDiv}>
                             Forgot Password? 
                             </div>

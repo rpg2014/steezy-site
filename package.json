@@ -4,6 +4,7 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build && next export",
+    "analyze": "ANALYZE=true next build",
     "build-wasm": "wasm-pack build steezy-wasm ; jq '. + {type: \"module\", main: \"steezy-wasm.js\"} | del(.module)' steezy-wasm/pkg/package.json | sponge steezy-wasm/pkg/package.json",
     "link-wasm": "cd steezy-wasm/pkg ; npm link ; cd - ; npm link steezy-wasm",
     "start": "next start",
@@ -11,6 +12,7 @@
   },
   "dependencies": {
     "@aws-amplify/datastore": "^3.7.5",
+    "@next/bundle-analyzer": "^12.0.10",
     "@types/amplify": "^1.1.25",
     "@types/react-bootstrap": "^0.32.29",
     "aws-amplify": "^4.3.13",

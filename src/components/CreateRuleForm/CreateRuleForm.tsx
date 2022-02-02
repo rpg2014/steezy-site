@@ -2,7 +2,7 @@ import { error } from "console"
 import Link from "next/link"
 import React from "react"
 import { InputGroup, Spinner, Button, Alert } from "react-bootstrap"
-import { NavBar } from "../NavBar/NavBar"
+import { SteezyNavBar } from "../NavBar/NavBar"
 import styles from './CreateRuleForm.module.scss'
 
 // if given ruleid we need to fetch it and prefill out the form.  
@@ -10,7 +10,7 @@ export const CreateRuleForm = ({ruleId }: {ruleId?: string | string[] | null}) =
 
     return (
         <>
-        <NavBar />
+        <SteezyNavBar />
         {/* <InputGroup label='Email' name='email' type={"email"} setFormState={setFormState} value={formState.email}  />
                         <InputGroup label='Password' name='password' type="password" setFormState={setFormState} value={formState.password} />
                         <div className={styles.loginButtonDiv}>

@@ -4,7 +4,8 @@ import React, { useEffect, useState } from 'react'
 import Head from 'next/head'
 import { useSetupServiceWorker } from '../src/hooks/useSetupServiceWorker'
 import { HubPayload } from '@aws-amplify/core'
-import Amplify, { Auth, DataStore, Hub } from 'aws-amplify';
+import Amplify from '@aws-amplify/core';
+import { Auth, DataStore, Hub } from 'aws-amplify';
 import awsconfig from '../src/aws-exports';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'react-toastify/dist/ReactToastify.min.css';

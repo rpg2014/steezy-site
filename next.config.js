@@ -1,5 +1,9 @@
 const withPWA = require('next-pwa')
 const path = require('path')
+const withBundleAnalyzer = require('@next/bundle-analyzer')({
+    enabled: process.env.ANALYZE === 'true',
+})
+
 const nextConfig = {
     reactStrictMode: true,
     sassOptions: {
@@ -25,7 +29,7 @@ const nextConfig = {
       },
 }
 
-module.exports = withPWA(
+module.exports = withBundleAnalyzer(withPWA(
     {
         ...nextConfig,
         pwa: {
@@ -35,7 +39,7 @@ module.exports = withPWA(
             skipWaiting: false,
         }
     }
-);
+));
 
 // Found here https://github.com/vercel/next.js/issues/29362, I hope this'll work
 class WasmChunksFixPlugin {
