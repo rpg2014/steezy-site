@@ -21,18 +21,13 @@ class MyDocument extends Document {
 
         <link rel="manifest" href="/manifest.json" />
         <link
-          href="favicon.ico"
+          href="blueBird.100x100.png"
           rel="icon"
           type="image/png"
-          sizes="16x16"
+          sizes="100x100"
         />
-        <link
-          href="/favicon.ico"
-          rel="icon"
-          type="image/ico"
-          sizes="32x32"
-        />
-        <link rel="apple-touch-icon" href="/favicon.ico"></link>
+        
+        <link rel="apple-touch-icon" href="/blueBird.100x100.png"></link>
         <meta name="theme-color" content="#317EFB" />
         </Head>
         <body>

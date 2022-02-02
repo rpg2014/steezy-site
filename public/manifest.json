@@ -1,6 +1,7 @@
 {
-    "name": "PWA App",
-    "short_name": "App",
+    "name": "Steezy Stevens",
+    "short_name": "Steezy",
+    "description": "STevns Epic Evaluation for Zoomers",
     "icons": [
       {
         "src": "public/blueBird.100x100.png",
@@ -14,8 +15,8 @@
         "type": "image/png"
       }
     ],
-    "theme_color": "#FFFFFF",
-    "background_color": "#FFFFFF",
+    "theme_color": "#212529",
+    "background_color": "#212529",
     "start_url": "/",
     "display": "standalone",
     "orientation": "portrait"

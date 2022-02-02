@@ -11,8 +11,12 @@ import styles from '../../styles/Admin.module.scss'
 
 const Admin: NextPage = () => {
 
-    const {signedIn, isCommish} = useRequireCommish()
+    const {signedIn, isCommish} = useAuth()
+
+
     const router = useRouter();
+
+    
     return (
         <>
         <Head >
@@ -27,11 +31,16 @@ const Admin: NextPage = () => {
                 <div className={styles.description}>
 
                 </div>
-                <div className={styles.grid}>
+                <br />
+                <hr className={styles.divider}/>
+                <br />
+                {!isCommish ? 
+                <div> You Dont have permissions</div>
+                : <div className={styles.grid}>
                     <Link passHref href="/rule/create-rule">
                     <div className={styles.card}><h2>Create new rule &rarr;</h2></div>
                     </Link>
-                </div>
+                </div>}
         </main>
         </div>
         </>

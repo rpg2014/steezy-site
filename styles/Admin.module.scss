@@ -1,1 +1,15 @@
-@import './components.module.scss';
+@import './variables.module.scss';
+@import 'components.module.scss';
+
+
+.title {
+    width: 100vw;
+    text-align: center;
+}
+
+.divider {
+    width: 60%;
+    @media (max-width: $breakpoint) {
+        width: 100%;
+    }
+}
