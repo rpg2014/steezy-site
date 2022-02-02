@@ -4,8 +4,9 @@ import { DataStore, Predicates } from "aws-amplify";
 import Link from "next/link";
 
 import React, { FormEvent, FormEventHandler, HTMLInputTypeAttribute, useState } from "react";
-import { Alert, Button} from "react-bootstrap";
+import { Alert, Button, Spinner} from "react-bootstrap";
 import styles from '../../../styles/CreateAccount.module.scss'
+import { useAuth } from "../../hooks/useAuth";
 import { Rider, RiderLevels } from "../../models";
 import { InputGroup } from "../InputGroup/inputGroup";
 
@@ -21,7 +22,7 @@ interface FormData  {
     verificationCode: string,
 }
 
-type FlowStates = 'CREATE_ACCOUNT' | 'CONFIRM_EMAIL' | "DONE"
+type FlowStates = 'CREATE_ACCOUNT' | 'CONFIRM_EMAIL' | "LOGGING_IN"| "CREATING_USER"| "DONE"
 
 export const CreateAccountForm = () => {
     const [flowState, setFlowState] = useState<FlowStates>('CREATE_ACCOUNT')
@@ -29,9 +30,11 @@ export const CreateAccountForm = () => {
     const [deliveredToEmail, setDeliveredToEmail] = useState("");
     const [userSub, setUserSub] = useState("");
     const [error, setError] = useState<Error>();
+    const [isLoading, setIsLoading] = useState(false);
     
 
     const onSubmit = () => {
+        setIsLoading(true);
         Auth.signUp({
             username: formState.email,
             password: formState.password,
@@ -39,24 +42,27 @@ export const CreateAccountForm = () => {
                 preferred_username: formState.name
             }
         }).then((user) => {
-            console.log(user)
+            setIsLoading(false);
             setDeliveredToEmail(user.codeDeliveryDetails.Destination)
             setFlowState("CONFIRM_EMAIL")
             setUserSub(user.userSub)
         })
-        .catch(setError);   
+        .catch((e) => {
+            setIsLoading(false)
+            setError(e)
+        });   
     }
 
     const onConfirmEmail = () => {
+        setIsLoading(true)
         Auth.confirmSignUp(formState.email, formState.verificationCode)
         .then(() => {
+            setFlowState("LOGGING_IN")
             console.log("Attempting login")
             return Auth.signIn(formState.email, formState.password)
         })
-        .then(()=> {
-            setFlowState("DONE")
-        })
         .then(() => {
+            setFlowState("CREATING_USER")
             console.log("Creating Rider in datastore")
             return DataStore.save(
                 new Rider({
@@ -66,11 +72,14 @@ export const CreateAccountForm = () => {
                   })
               );
         }).then((rider)=>{
-            console.log("rider created")
-            console.log(rider)
+            console.log(`rider ${rider.name} created`)
+            setIsLoading(false);
+            setFlowState("DONE")
         })
-       
-        .catch(setError);   
+        .catch((e) => {
+            setIsLoading(false)
+            setError(e)
+        });    
     }
 
     if(flowState === "CONFIRM_EMAIL") {
@@ -84,45 +93,56 @@ export const CreateAccountForm = () => {
                 placeholder='123456'/>
             <div className={styles.interactionContainer}>
                 
-                <button className={styles.submitButton} onClick={onConfirmEmail}>Confirm Email</button>
+                <Button className={styles.submitButton} variant='primary' disabled={isLoading} onClick={onConfirmEmail}>Confirm Email</Button>
             </div>
             </div>
             
         )
-    }else if(flowState === 'DONE') {
+    }else if(flowState === "CREATE_ACCOUNT") {
+        return (
+            
+            <div className={styles.createAccountForm}>
+                <div className={styles.title}  >
+                    Create Account
+                </div>
+                <div className={styles.form}>
+                <InputGroup label="Name" type='text' value={formState?.name} name='name' setFormState={setFormState}/>
+                <InputGroup label="Email" type='email' value={formState?.email} name='email' setFormState={setFormState}/>
+                <InputGroup label="Pasword" type='password' value={formState?.password} name='password' setFormState={setFormState}/>
+                <InputGroup label='Rider Level' select={{options: Object.keys(RiderLevels)}} type='text' value={formState?.riderLevel} name='riderLevel' setFormState={setFormState} />
+                </div>
+                <div className={styles.interactionContainer}>
+                    <Button variant='primary' className={styles.submitButton} disabled={isLoading} onClick={onSubmit}>Create Account</Button>
+                    
+                </div>
+                {error && <Alert className={styles.ErrorBox} variant='danger' >{error.message} </Alert>}
+            </div>
+        )
+    }else {
+        let textToDisplay ='';
+        switch(flowState) {
+            case 'LOGGING_IN':
+                textToDisplay = "Logging in..."
+                break;
+            case 'CREATING_USER':
+                textToDisplay = "Creating User..."
+                break;
+            case 'DONE': 
+                textToDisplay = "You're all set!"
+        }
         return (
             <div className={styles.createAccountForm}>
-              <div className={styles.title}  >
-                  You're all set! 
+              <div className={[styles.loadingTitle, styles.title].join(' ')}  >
+                {flowState === "DONE" ? "Completed!" : "Working..."}
+                {flowState !== "DONE" && <Spinner className={styles.loadingSpinner} animation='border' />}
               </div>
-              <p className={`${styles.text} lead`}>Return home to login</p>
+              <p className={`${styles.text} lead`}>{textToDisplay}</p>
               <div className={styles.interactionContainer}>
-            <Link passHref href='/'><button className={styles.returnHome}>Return Home</button></Link>
+            <Link passHref href='/'><Button disabled={isLoading} variant='success-outline' className={styles.returnHome}>Return Home</Button></Link>
             </div>
             </div>
         )
     }
-
-    return (
-        
-        <div className={styles.createAccountForm}>
-              <div className={styles.title}  >
-                  Create Account
-              </div>
-            <InputGroup label="Name" type='text' value={formState?.name} name='name' setFormState={setFormState}/>
-            <InputGroup label="Email" type='email' value={formState?.email} name='email' setFormState={setFormState}/>
-            <InputGroup label="Pasword" type='password' value={formState?.password} name='password' setFormState={setFormState}/>
-            <InputGroup label='Rider Level' select={{options: Object.keys(RiderLevels)}} type='text' value={formState?.riderLevel} name='riderLevel' setFormState={setFormState} />
-            <div className={styles.interactionContainer}>
-                <button className={styles.submitButton} onClick={onSubmit}>Create Account</button>
-                <div className={styles.forgotPasswordDiv}>
-                    Forgot Password? 
-                    {/*TODO: Link to forgot password component */}
-                </div>
-            </div>
-            {error && <Alert className={styles.ErrorBox} >{error.message} </Alert>}
-        </div>
-    )
 }
 
 

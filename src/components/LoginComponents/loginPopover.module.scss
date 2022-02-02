@@ -3,13 +3,15 @@
 .loginButtonDiv {
     display: flex;
     
-    justify-content: right;
+    justify-content: space-between;
     align-items: center;
-    margin-bottom: 0.5rem;
+    margin-bottom: 0rem;
+    margin-top: 1.5rem;
 }
 
 .loginPopover {
     background-color: $dark;
+    width: 20rem;
 }
 
 .loginHeader{
@@ -17,6 +19,15 @@
     color: $light;
 }
 
+.syncToast {
+    display: flex;
+    align-items: center;
+}
 .errorAlert {
     margin-bottom: 0;
+}
+
+.forgotPasswordDiv {
+    color: $dark;
+    cursor: pointer;
 }
