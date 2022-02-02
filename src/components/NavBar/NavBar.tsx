@@ -18,23 +18,28 @@ export const SteezyNavBar = () => {
     return (
         <div className={styles.container}>
             <Navbar collapseOnSelect className={styles.navBox + ' sticky-top'} expand="md" bg="dark" variant="dark">
-                <Container className={styles.innerContainer}>
-                    <Navbar.Brand href="/">
+                <div  className={styles.innerContainer}>
+                    <Link href='/' >
+                    <Navbar.Brand className={styles.brand} >
                         <img
                             alt=""
                             src="/blueBird.bmp"
                             width="30"
                             height="30"
-                            className="d-inline-block align-top"
-                        />{'\t'}Steezy</Navbar.Brand>
-                    <Navbar.Toggle aria-controls="responsive-navbar-nav" >
+                            className={`d-inline-block align-top ${styles.brandImg}`}
+                        />{'\t'}Steezy
+                        </Navbar.Brand>
+                        </Link>
+                        <div className={styles.toggle}>
+                    <Navbar.Toggle aria-controls="responsive-navbar-nav"  ></Navbar.Toggle>
+                        </div>
                         {/* Put animated hamburger here */}
-                    </Navbar.Toggle>
+                    
                     <Navbar.Collapse id="navbarScroll">
                         <Nav variant='pills' className={"me-auto " + styles.textLinksDiv}>
 
-                            <Nav.Link href="/scoreboard">Scoreboard</Nav.Link>
-                            <Nav.Link href="/add-points">Add Points</Nav.Link>
+                            <Nav.Link  href="/scoreboard">Scoreboard</Nav.Link>
+                            <Nav.Link  href="/add-points">Add Points</Nav.Link>
                         </Nav>
                         <Nav className={styles.AuthDiv}>
                             <SignInOutButton />
@@ -44,7 +49,7 @@ export const SteezyNavBar = () => {
                             }
                         </ Nav>
                     </Navbar.Collapse>
-                </Container>
+                </div>
             </Navbar>
         </div>
     )
