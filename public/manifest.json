@@ -3,19 +3,14 @@
     "short_name": "App",
     "icons": [
       {
-        "src": "/icons/android-chrome-192x192.png",
-        "sizes": "192x192",
+        "src": "public/blueBird.100x100.png",
+        "sizes": "100x100",
         "type": "image/png",
         "purpose": "any maskable"
       },
       {
-        "src": "/icons/android-chrome-384x384.png",
-        "sizes": "384x384",
-        "type": "image/png"
-      },
-      {
-        "src": "/icons/icon-512x512.png",
-        "sizes": "512x512",
+        "src": "public/blueBird.bmp",
+        "sizes": "900x900",
         "type": "image/png"
       }
     ],

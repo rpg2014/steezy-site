@@ -57,13 +57,13 @@ amplifytools.xcconfig
 **.sample
 #amplify-do-not-edit-end
 
-amplify/
-!amplify/backend/api/Steezy/schema.graphql
+# amplify/
+# !amplify/backend/api/Steezy/schema.graphql
 
 .vscode/settings.json
-sw.js
-workbox*
-fallback*
-worker*
+public/sw.js
+public/workbox*
+public/fallback*
+public/worker*
 
 /design_images
