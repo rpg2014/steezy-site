@@ -41,15 +41,15 @@ const Home: NextPage = () => {
 
     }, [cognitoId, signedIn, syncReady])
     return (
-        <div className={styles.container}>
+        
+            <>
             
-            <SteezyNavBar />
             <main className={styles.main}>
                 
                 <h1 className={styles.title}>
                     Welcome to Steezy
                 </h1>
-
+                
                 <div className={styles.description}>
                     <p>
                         UserId is {cognitoId}
@@ -58,19 +58,15 @@ const Home: NextPage = () => {
                         <br />
                         email is {email}
                     </p>
-                    <hr />
-                    <div style={{ fontSize: '20px' }}>
-                        User Object is:
-                        <br />
-                        <pre style={{ textAlign: "left", backgroundColor: 'black', color: "white", fontSize: "16px" }}>
-                            {JSON.stringify(riderData, null, 2)}
-                        </pre>
-                    </div>
+                    
                 </div>
                 
+                <hr className={styles.divider}/>
                 <div className={styles.grid}>
+                
                     <Link passHref href='/admin'>
-                    <div  className={styles.card}>
+                    <div  className={styles.cardDanger}>
+                        
                         <h2>Admin Page &rarr;</h2>
                         <p>Find in-depth information about Next.js features and API.</p>
                     </div>
@@ -142,7 +138,7 @@ const Home: NextPage = () => {
           </span>
         </a>
       </footer> */}
-        </div>
+        </>
     )
 }
 

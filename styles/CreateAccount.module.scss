@@ -13,14 +13,14 @@
     }
 }
 .createAccountForm {
-    background-color: #5c5c5c;
+    background-color: variables.$dark;
     opacity: 0.95;
     border-radius: .2rem ;
     width: 30rem;
     height: fit-content;
     display: flex;
     flex-direction: column;
-    
+    box-shadow: 0.14rem 0.25rem 0.25rem variables.$secondary;
 }
 .form {
     padding-left: 3rem;
