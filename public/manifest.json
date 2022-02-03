@@ -4,13 +4,13 @@
     "description": "STevns Epic Evaluation for Zoomers",
     "icons": [
       {
-        "src": "public/blueBird.100x100.png",
+        "src": "blueBird.100x100.png",
         "sizes": "100x100",
         "type": "image/png",
         "purpose": "any maskable"
       },
       {
-        "src": "public/blueBird.png",
+        "src": "blueBird.png",
         "sizes": "900x900",
         "type": "image/png"
       }
