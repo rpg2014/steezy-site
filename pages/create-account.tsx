@@ -15,17 +15,10 @@ const CreateAccount: NextPage = () => {
             <Head>
                 <title>Create Steezy Account</title>
             </Head>
-
-            <div className={styles.container}>
-                <div className={styles.header}>
-                    <Link href="/" passHref >
-                        <Button className={styles.backButton} variant='outline-light' size='sm' >{'<- Back'}</Button>
-                    </Link>
-                </div>
                 {signedIn ? <Alert variant='light'>You shouldn't be here, You are already logged in.</Alert> 
                 : <CreateAccountForm/>
     }
-            </div>
+            
         </>
     )
 }

@@ -1,6 +1,6 @@
 import '../styles/globals.scss'
 import type { AppProps } from 'next/app'
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import Head from 'next/head'
 import { useSetupServiceWorker } from '../src/hooks/useSetupServiceWorker'
 import { HubPayload } from '@aws-amplify/core'
@@ -9,8 +9,10 @@ import { Auth, DataStore, Hub } from 'aws-amplify';
 import awsconfig from '../src/aws-exports';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'react-toastify/dist/ReactToastify.min.css';
-import { ToastContainer } from 'react-toastify'
+import { toast, ToastContainer } from 'react-toastify'
 import { ProvideAuth } from '../src/hooks/useAuth'
+import { NextPage } from 'next'
+import { Layout } from '../src/components/NavBar/Layout'
 
 
 Amplify.configure(awsconfig);
@@ -21,7 +23,9 @@ declare global {
         startDataStore:any;
         signOut:any;
     }
+   
 }
+
 
 
 function MyApp({ Component, pageProps }: AppProps) {
@@ -38,10 +42,27 @@ function MyApp({ Component, pageProps }: AppProps) {
             Auth.signOut();
         }
     },[])
+    
+    const toastId = React.useRef<string | number | undefined>();
+
+    const errorNotify = (e: any) => toastId.current = toast.error(`${e.data?.modelName} Sync failed: ${e.data?.element.errorType}`,
+    {
+        position: "bottom-center",
+        autoClose: 3000,
+        hideProgressBar: true,
+        closeOnClick: false,
+        pauseOnHover: false,
+        draggable: true,
+        progress: undefined,
+        theme: 'dark',
+    })
 
  
     const listener = (data: { payload: HubPayload }) => {
         // console.log(`[DATASTORE] New event: ${JSON.stringify(data)}`)
+        if (data.payload.event === "outboxMutationFailed") {
+            errorNotify(data.payload);
+        }
     }
     useEffect(() => {
         Hub.listen('datastore', listener)
@@ -49,6 +70,7 @@ function MyApp({ Component, pageProps }: AppProps) {
     },[])
 
     // TODO: setup a datastore sync waiter here if the store is empty?
+  
     return <>
         <Head>
             <meta name="viewport"
@@ -56,10 +78,14 @@ function MyApp({ Component, pageProps }: AppProps) {
             <title>Steezy Stevens</title>
         </Head>
         <ProvideAuth>
-        <Component {...pageProps} />
+            <Layout >
+                <Component {...pageProps} />
+            </Layout>
         <ToastContainer />
         </ProvideAuth>
     </>
 }
+
+
 
 export default MyApp

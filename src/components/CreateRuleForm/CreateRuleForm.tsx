@@ -10,8 +10,7 @@ export const CreateRuleForm = ({ruleId }: {ruleId?: string | string[] | null}) =
 
     return (
         <>
-        <SteezyNavBar />
-        {/* <InputGroup label='Email' name='email' type={"email"} setFormState={setFormState} value={formState.email}  />
+                {/* <InputGroup label='Email' name='email' type={"email"} setFormState={setFormState} value={formState.email}  />
                         <InputGroup label='Password' name='password' type="password" setFormState={setFormState} value={formState.password} />
                         <div className={styles.loginButtonDiv}>
                         <Link href='/forgot-password' >

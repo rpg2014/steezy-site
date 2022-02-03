@@ -1,8 +1,8 @@
-@use 'variables.module.scss';
 
+@import 'variables.module.scss';
 .container {
     // padding: 0s 2rem;
-    height: max-content;
+    // height: max-content;
     // padding-top: 15%;
     display: flex;
     flex-direction: column;
@@ -20,14 +20,21 @@
     align-items: center;
   }
 
+  .divider {
+    width: 60%;
+    @media (max-width: $breakpoint) {
+        width: 100%;
+    }
+}
   .grid {
     display: flex;
     align-items: center;
     justify-content: center;
     flex-wrap: wrap;
     max-width: 1800px;
+    transition: all 200ms ease-in-out;
   }
-  @media (max-width: variables.$breakpoint) {
+  @media (max-width: $breakpoint) {
     .grid {
       width: 100%;
       flex-direction: column;
@@ -64,3 +71,14 @@
       }
   }
 
+
+  .cardDanger {
+      @extend .card;
+      border: 1px solid $danger;
+      &:hover,
+      &:focus,
+      &:active {
+          color: $danger;
+          border-color: $danger;
+      }
+  }

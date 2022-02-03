@@ -10,7 +10,7 @@
         "purpose": "any maskable"
       },
       {
-        "src": "public/blueBird.bmp",
+        "src": "public/blueBird.png",
         "sizes": "900x900",
         "type": "image/png"
       }

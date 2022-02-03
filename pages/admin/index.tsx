@@ -22,9 +22,9 @@ const Admin: NextPage = () => {
         <Head >
             <title>Commissioner's office</title>
         </Head>
-        <div className={styles.container}>
+        
         <main className={styles.main}>
-            <SteezyNavBar />
+            
             <h2 className={styles.title}>
                     Admin Page
                 </h2>
@@ -42,7 +42,6 @@ const Admin: NextPage = () => {
                     </Link>
                 </div>}
         </main>
-        </div>
         </>
     )
 }
