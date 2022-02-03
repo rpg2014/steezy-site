@@ -4,6 +4,8 @@ import { Button, Container, Nav, Navbar } from "react-bootstrap"
 import { useAuth } from "../../hooks/useAuth"
 import { SignInOutButton } from "../LoginComponents/LoginPopover"
 import styles from './NavBar.module.scss'
+import logo from '/public/blueBird.png' ;
+// import Image from "next/image"
 
 
 
@@ -16,14 +18,13 @@ export const SteezyNavBar = () => {
     //have state to show offcanvas.  Have media query check to only open when below md breakpoint
     // https://www.w3schools.com/howto/howto_js_off-canvas.asp
     return (
-        <header className={styles.container}>
             <Navbar collapseOnSelect className={styles.navBox + ''} fixed='top' expand="md" bg="dark" variant="dark">
                 <div className={styles.innerContainer}>
                     <Link passHref href='/' >
                         <Navbar.Brand className={styles.brand} >
                             <img
                                 alt=""
-                                src="/blueBird.bmp"
+                                src={logo}
                                 width="30"
                                 height="30"
                                 className={`d-inline-block align-top ${styles.brandImg}`}
@@ -52,6 +53,6 @@ export const SteezyNavBar = () => {
                     </Navbar.Collapse>
                 </div>
             </Navbar>
-        </header>
+    
     )
 }

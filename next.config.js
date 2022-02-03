@@ -9,6 +9,9 @@ const nextConfig = {
     sassOptions: {
         // includePaths: [path.join(__dirname, 'styles')],
       },
+      images: {
+        disableStaticImages: true
+      },
     webpack(config, { isServer, dev }) {
         config.experiments = {
           asyncWebAssembly: true,
@@ -24,6 +27,18 @@ const nextConfig = {
           test: /\.svg$/,
           use: ["@svgr/webpack"],
         });
+        config.module.rules.push({
+			test: /\.(svg|png|jpe?g|gif|mp4)$/i,
+			use: [
+				{
+					loader: 'file-loader',
+					options: {
+						publicPath: '/_next',
+						name: 'static/media/[name].[hash].[ext]',
+					},
+				},
+			],
+		})
     
         return config;
       },
