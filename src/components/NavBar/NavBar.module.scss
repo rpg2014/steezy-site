@@ -18,36 +18,43 @@ $transition-time: 300ms;
 
 
 .container {
-    margin: 1rem auto;
-    width: 80%;
+    
+    
     // display: flex;
     // justify-content: center;
     // align-items: center;
     transition: all $transition-time ease-in-out;
 
     @media (max-width: $breakpoint) {
-        margin: 0;
-        margin-bottom: 0.5rem;
-        width: 100%;
-        height: 4rem;
+        
     }
 
 }
 
 .navBox {
+    margin: 1rem auto;
     border-radius: 0.25rem;
     box-shadow: 0.25rem .20rem 0.35rem $secondary;
     display: flex;
     justify-content: center;
     transition: all $transition-time ease-in-out;
-    width: 100%;
+    height: fit-content;
+    // transition: position  ease-in-out;
+    width: 80%;
+    position: -webkit-sticky;
     position: sticky;
+    top: -1px;
 
     @media (max-width: $breakpoint) {
         border-radius: 0;
         box-shadow: 0px .10rem 0.25rem $secondary;
-        position: fixed;
+        // position: fixed;
+        top: 0;
 
+        margin: 0;
+        margin-bottom: 0.5rem;
+        width: 100%;
+        height: 4rem;
     }
 }
 
@@ -56,14 +63,17 @@ $transition-time: 300ms;
     justify-content: space-between;
     align-items: center;
     flex-wrap: inherit;
-    margin: 0 auto;
+    margin: 0 auto ;
     padding: 0 0.5rem;
     width: 100%;
     transition: all $transition-time ease-in-out;
+    // box-shadow: 0 transparent;
 
     @media (max-width: $breakpoint) {
         margin: 0;
-
+        padding: 0 0.5rem 0.5rem;
+        background-color: $dark;
+        // box-shadow: 0px .10rem 0.45rem $secondary;
     }
 }
 
