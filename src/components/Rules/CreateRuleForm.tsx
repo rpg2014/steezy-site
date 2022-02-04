@@ -2,7 +2,7 @@ import { error } from "console"
 import Link from "next/link"
 import React from "react"
 import { InputGroup, Spinner, Button, Alert } from "react-bootstrap"
-import { SteezyNavBar } from "../NavBar/NavBar"
+import { SteezyNavBar } from "../Layout/NavBar"
 import styles from './CreateRuleForm.module.scss'
 
 // if given ruleid we need to fetch it and prefill out the form.  

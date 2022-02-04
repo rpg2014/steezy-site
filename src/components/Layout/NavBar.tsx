@@ -14,7 +14,7 @@ export const SteezyNavBar = () => {
     //TODO Add toggle between sticky and fixed top navbar
 
 
-    const { signedIn } = useAuth();
+    const { signedIn,isCommish } = useAuth();
     //have state to show offcanvas.  Have media query check to only open when below md breakpoint
     // https://www.w3schools.com/howto/howto_js_off-canvas.asp
     return (
@@ -28,7 +28,7 @@ export const SteezyNavBar = () => {
                                 width="30"
                                 height="30"
                                 className={`d-inline-block align-top ${styles.brandImg}`}
-                            />{'\t'}Steezy
+                            />Steezy
                         </Navbar.Brand>
                     </Link>
                     <div className={styles.toggle}>
@@ -37,11 +37,16 @@ export const SteezyNavBar = () => {
                     {/* Put animated hamburger here */}
 
                     <Navbar.Collapse id="navbarScroll">
-                        <Nav variant='pills' className={"me-auto " + styles.textLinksDiv}>
-                            <Link passHref href='/scoreboard'>
-                                <Nav.Link>Scoreboard</Nav.Link>
+                        <Nav justify className={"me-auto " + styles.textLinksDiv}>
+                            <Link passHref  href='/scoreboard'>
+                                <Nav.Link  className={' '+styles.navButton} >Scoreboard</Nav.Link>
                             </Link>
-                            <Nav.Link href="/add-points">Add Points</Nav.Link>
+                            <Link passHref href="/add-points">
+                            <Nav.Link className={' '+styles.navButton}>Add Points</Nav.Link>
+                            </Link>
+                            {isCommish && <Link passHref href="/admin">
+                                <Nav.Link className={''+styles.navButton}>Admin</Nav.Link>
+                            </Link>}
                         </Nav>
                         <Nav className={styles.AuthDiv}>
                             <SignInOutButton />

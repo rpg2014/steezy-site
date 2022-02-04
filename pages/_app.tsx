@@ -12,7 +12,7 @@ import 'react-toastify/dist/ReactToastify.min.css';
 import { toast, ToastContainer } from 'react-toastify'
 import { ProvideAuth } from '../src/hooks/useAuth'
 import { NextPage } from 'next'
-import { Layout } from '../src/components/NavBar/Layout'
+import { Layout } from '../src/components/Layout/Layout'
 
 
 Amplify.configure(awsconfig);

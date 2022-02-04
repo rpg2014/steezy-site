@@ -79,7 +79,9 @@ $transition-time: 300ms;
 
 .brand {
     cursor: pointer;
-
+    display:flex;
+    justify-content: space-between;
+    align-items: center;
     padding-left: 1rem;
     transition: all 50ms ease-in-out;
 
@@ -97,8 +99,9 @@ $transition-time: 300ms;
 }
 
 .brandImg {
-    margin-right: 0.1rem;
+    margin-right: 0.5rem;
     border-radius: 0.1rem;
+    
 }
 
 .toggle {
@@ -114,7 +117,46 @@ $transition-time: 300ms;
     justify-content: left;
 
     @media (max-width: $breakpoint) {
-        align-items: start;
+        align-items: center;
         padding-left: 0.5rem;
     }
+}
+
+$blue-bird: $secondary;//#26aeea;
+.navButton{
+    margin-right: 0.125rem;
+    cursor: pointer;
+    border: 1px solid transparent;
+    color: rgba($text-light, $alpha: 0.75) !important;
+    border-radius: .25rem;
+    user-select: none;
+    font-weight: 400;
+    line-height: 1.5;
+    background-color: transparent;
+    transition: all .15s ease-in-out;
+    &:hover {
+     color: $text-light  !important;
+     border: 1px solid $secondary;
+     box-shadow: 0.125 0.125rem 0.25rem $black;
+     background-color: rgba($secondary, $alpha: 0.25);
+    }
+
+
+    @media (max-width: $breakpoint) {
+        align-items: start;
+        font-size: larger;
+        width: 80%;
+        margin: 0.25rem 0.25rem;
+        padding: 0.25rem .5rem !important;
+    }
+}
+
+.danger {
+    @extend .navButton ;
+    &:hover {
+        color: $text-light  !important;
+        border: 1px solid $danger;
+        box-shadow: 0.125 0.125rem 0.25rem $black;
+        background-color: rgba($danger, $alpha: 0.25) !important;
+       }
 }

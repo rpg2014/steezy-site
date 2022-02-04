@@ -3,7 +3,7 @@ import Head from "next/head";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import React, { useEffect } from "react";
-import { SteezyNavBar } from "../../src/components/NavBar/NavBar";
+import { SteezyNavBar } from "../../src/components/Layout/NavBar";
 import { useAuth, useRequireCommish } from "../../src/hooks/useAuth";
 import styles from '../../styles/Admin.module.scss'
 
