@@ -6,6 +6,8 @@
 
 $breakpoint: map-get($grid-breakpoints, md );
 
+$text-dark: $dark;
+$text-light: $light;
 
 :export {
     breakpoint: $breakpoint
