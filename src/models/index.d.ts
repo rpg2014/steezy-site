@@ -73,6 +73,7 @@ export declare class RuleScaling {
   readonly blue: number;
   readonly black: number;
   readonly doubleBlack: number;
+  readonly name?: string;
   readonly createdAt?: string;
   readonly updatedAt?: string;
   constructor(init: ModelInit<RuleScaling, RuleScalingMetaData>);

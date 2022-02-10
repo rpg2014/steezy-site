@@ -28,7 +28,7 @@ export const InputGroup = (props: InputGroupProps ) => {
                 <label className={`${styles.inputLabel} text-white`} >{props.label}</label>
                 {props.select ? 
                 <select value={props.value} name={props.name} className={styles.inputField} onChange={onInput}>
-                    {Object.keys(RiderLevels).map(option =>
+                    {Object.values(props.select.options).map(option =>
                         <option key={option} value={option}>{option}</option>
                     )}
                 </select>

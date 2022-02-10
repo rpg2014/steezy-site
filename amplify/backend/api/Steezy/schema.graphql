@@ -41,6 +41,7 @@ type RuleScaling @model @auth(rules: [{allow: groups, groups: ["commissioners"],
   blue: Float!
   black: Float!
   doubleBlack: Float!
+  name: String
 }
 
 type Rider @model @auth(rules: [{allow: groups, groups: ["commissioners"], operations: [read, create, update, delete]}, {allow: owner}, {allow: private, operations: [read, create]}]) {

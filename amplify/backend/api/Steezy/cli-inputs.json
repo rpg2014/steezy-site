@@ -3,7 +3,7 @@
   "serviceConfiguration": {
     "apiName": "Steezy",
     "serviceName": "AppSync",
-    "gqlSchemaPath": "/tmp/amplify-d619ad73-cce4-4153-8651-f852e8eb98fc/amplify/backend/api/Steezy/schema.graphql",
+    "gqlSchemaPath": "/tmp/amplify-f2518cd8-1bbb-41db-8e64-33faaeacc516/amplify/backend/api/Steezy/schema.graphql",
     "defaultAuthType": {
       "mode": "AMAZON_COGNITO_USER_POOLS",
       "cognitoUserPoolId": "authSteezy"
