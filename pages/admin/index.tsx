@@ -37,7 +37,7 @@ const Admin: NextPage = () => {
                 {!isCommish ? 
                 <div> You Dont have permissions</div>
                 : <div className={styles.grid}>
-                    <Link passHref href="/rule/create-rule">
+                    <Link passHref href="/rules/create-rule">
                     <div className={styles.card}><h2>Create new rule &rarr;</h2></div>
                     </Link>
                 </div>}

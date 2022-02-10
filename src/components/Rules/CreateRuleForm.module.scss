@@ -1,1 +1,80 @@
-@import '/styles/components.module.scss'
+@import '/styles/components.module.scss';
+@import "/styles/variables.module.scss";
+.createRuleContainer {
+    background-color: $dark;
+    color: $text-light;
+    opacity: 0.95;
+    border-radius: .2rem ;
+    width: 30rem;
+    height: fit-content;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0.14rem 0.25rem 0.25rem $secondary;
+}
+.form {
+    padding-left: 3rem;
+    color: $light;
+}
+.header {
+    width: 100%;
+    padding-left: 5rem;
+    display: flex;
+    justify-content: left;
+    align-items: center;
+}
+.title {
+    color: $light;
+    padding-left: 7%;
+    padding-top: 2rem;
+    font-size: 24px;
+    box-shadow: 3px, 1px, 1px black;
+}
+.seeAllRulesDiv {
+    word-wrap: break-word;
+    margin: 0.2rem;
+    padding: 0.2rem;
+    text-align: center;
+    font-size: smaller;
+}
+.paragraph {
+    font-size: small;
+    
+}
+.interactionContainer {
+    display: flex;
+    flex-direction: row-reverse;
+    justify-content: space-between;
+    margin: 1.5rem 2rem 3rem;
+    align-items: center;
+}
+
+.ruleScalingList{
+    border-radius: $border-radius;
+    display: flex;
+    justify-content: left;
+    flex-direction: column;
+    align-items:flex-start;
+
+    max-height: 400px;
+    overflow: auto;
+}
+
+
+.listItem {
+    color: $light;
+    cursor: pointer;
+    width: 75%;
+    box-shadow: 0.2rem 0.2rem 0.25rem $dark;
+    background-color: $secondary;
+    &:hover {
+        background-color: rgba($secondary, $alpha: 0.25);
+    }
+    &:active {
+        background-color: $light !important;
+    }
+}
+
+.listItemActive {
+    background-color: $dark;
+    border: 2px solid $primary;
+}

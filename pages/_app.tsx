@@ -67,7 +67,7 @@ function MyApp({ Component, pageProps }: AppProps) {
     useEffect(() => {
         Hub.listen('datastore', listener)
         return () => Hub.remove('datastore', listener)
-    },[])
+    },[listener])
 
     // TODO: setup a datastore sync waiter here if the store is empty?
   
