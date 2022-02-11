@@ -10,12 +10,20 @@ import { SignInOutButton } from '../src/components/LoginComponents/LoginPopover'
 import { SteezyNavBar } from '../src/components/Layout/NavBar'
 import { useAuth } from '../src/hooks/useAuth'
 import { useSyncStatus } from '../src/hooks/useSyncStatus'
-import { Rider } from '../src/models'
+import { Rider, Rule, RuleScaling, Season } from '../src/models'
 import styles from '../styles/Home.module.scss'
+import { CalcuationEngine } from '../steezy-wasm/pkg/steezy_wasm'
+import { useData } from '../src/hooks/useData'
+
+
+let engine: CalcuationEngine;
 
 const Home: NextPage = () => {
 
     const [riderData, setRiderData] = useState<Rider>();
+    const {data: rules} = useData(Rule);
+    const {data: ruleScalings} = useData(RuleScaling);
+    const {data: seasons} = useData(Season);
 
     const {syncReady} = useSyncStatus();
 
@@ -40,6 +48,15 @@ const Home: NextPage = () => {
         }
 
     }, [cognitoId, signedIn, syncReady])
+
+    useEffect(()=> {
+        let s = seasons ? seasons : []
+        if(rules && ruleScalings && s){
+        engine = CalcuationEngine.new(rules,ruleScalings,s)
+            console.log(engine.get_rule_ids())
+        }
+    },[rules,ruleScalings,seasons])
+
     return (
         
             <>
