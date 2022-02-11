@@ -7,7 +7,7 @@
         "src": "blueBird.100x100.png",
         "sizes": "100x100",
         "type": "image/png",
-        "purpose": "any maskable"
+        "purpose": "any"
       },
       {
         "src": "blueBird.png",

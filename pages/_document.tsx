@@ -12,8 +12,7 @@ class MyDocument extends Document {
         <Head >
         <link rel="preconnect" href="https://fonts.googleapis.com"/>
         <link href="https://fonts.googleapis.com/css2?family=Lato&display=swap" rel="stylesheet"/> 
-        <meta name='application-name' content='PWA App' />
-        
+        <meta name='application-name' content='Steezy Stevens' />
           <meta charSet="utf-8" />
           <meta httpEquiv="X-UA-Compatible" content="IE=edge" />
         
@@ -27,7 +26,6 @@ class MyDocument extends Document {
         />
         
         <link rel="apple-touch-icon" href="/blueBird.100x100.png"></link>
-        {/* <meta name="theme-color" content="#317EFB" /> */}
         </Head>
         <body>
           <Main />
