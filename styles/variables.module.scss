@@ -8,9 +8,10 @@ $breakpoint: map-get($grid-breakpoints, md );
 
 $text-dark: $dark;
 $text-light: $light;
-
+$transition-time: 300ms;
 :export {
-    breakpoint: $breakpoint
+    breakpoint: $breakpoint;
+    base-transition-time: $transition-time;
 }
 // /* make the customizations */
 // $theme-colors: (
