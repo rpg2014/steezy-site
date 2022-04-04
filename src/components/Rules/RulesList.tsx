@@ -108,7 +108,8 @@ const RuleComp = ({ rule, selected, addToSelected }: { rule: Rule, selected?: bo
             {
                 <div className={combineStyles(styles.flexed, selected ? '' : styles.remove)}>
                     {transitionFinished ? <>
-                        <Link passHref href={'/rules/create-rule?ruleId=' + rule.id}><Button className={styles.button} onTransitionEnd={(e) => e.stopPropagation()} size='sm' variant='outline-dark'>Edit Rule</Button></Link>
+                    {/* Below link isn't working for some reason */}
+                        <Link passHref href={'/rules/create-rule?ruleId=' + rule.id}><a><Button className={styles.button} onTransitionEnd={(e) => e.stopPropagation()} size='sm' variant='outline-dark'>Edit Rule</Button></a></Link>
                         <Button disabled={rule.lastEditedByCognitoId !== cognitoId && !isCommish} className={styles.button} onClick={()=> DataStore.delete(Rule,rule.id)} onTransitionEnd={(e) => e.stopPropagation()} size='sm' variant='outline-danger'>Delete </Button>
                     </> : null}
                 </div>
