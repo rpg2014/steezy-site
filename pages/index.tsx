@@ -10,12 +10,21 @@ import { SignInOutButton } from '../src/components/LoginComponents/LoginPopover'
 import { SteezyNavBar } from '../src/components/Layout/NavBar'
 import { useAuth } from '../src/hooks/useAuth'
 import { useSyncStatus } from '../src/hooks/useSyncStatus'
-import { Rider } from '../src/models'
+import { Rider, Rule, Season } from '../src/models'
 import styles from '../styles/Home.module.scss'
+import { CalcuationEngine } from '../steezy-wasm/pkg/steezy_wasm'
+import { useData } from '../src/hooks/useData'
+import { useSignedInRider } from '../src/hooks/useRider'
+
+
+let engine: CalcuationEngine;
 
 const Home: NextPage = () => {
 
-    const [riderData, setRiderData] = useState<Rider>();
+    const {riderData} = useSignedInRider();
+    const {data: rules} = useData(Rule);
+    
+    const {data: seasons} = useData(Season);
 
     const {syncReady} = useSyncStatus();
 
@@ -25,21 +34,7 @@ const Home: NextPage = () => {
     
 
 
-    //Query to get the rider data for the currenly logged in user.  
-    useEffect(() => {
-        if (signedIn && cognitoId ) {
-            console.log(`Query for: ${cognitoId}`)
-            DataStore.query(Rider, r => r.cognitoId('eq', cognitoId))
-                .then(riders => {
-                    // console.log(`saving riders: ${JSON.stringify(riders)}`)
-                    setRiderData(riders[0])
 
-                }).catch(console.error);
-        } else {
-            setRiderData(undefined)
-        }
-
-    }, [cognitoId, signedIn, syncReady])
     return (
         
             <>
@@ -57,25 +52,29 @@ const Home: NextPage = () => {
                         Name is {name}
                         <br />
                         email is {email}
+                        <br />
+                        Number of points earned: {riderData?.earnedPoints?.length}
                     </p>
                     
                 </div>
                 
                 <hr className={styles.divider}/>
                 <div className={styles.grid}>
-                
-                    <Link passHref href='/admin'>
-                    <div  className={styles.cardDanger}>
-                        
-                        <h2>Admin Page &rarr;</h2>
-                        <p>Find in-depth information about Next.js features and API.</p>
-                    </div>
+                    {signedIn &&
+                        <Link passHref href='/admin'>
+                        <div  className={styles.cardDanger}>
+                            
+                            <h2>Admin Page &rarr;</h2>
+                            <p>Find in-depth information about Next.js features and API.</p>
+                        </div>
+                        </Link>
+                    }
+                    <Link href="/rules" passHref>
+                     <div className={styles.card}>
+                        <h2>Rule List &rarr;</h2>
+                        <p>See the full list of rules</p>
+                        </div>
                     </Link>
-
-                    <a href="https://nextjs.org/learn" className={styles.card}>
-                        <h2>Learn &rarr;</h2>
-                        <p>Learn about Next.js in an interactive course with quizzes!</p>
-                    </a>
 
                     <a
                         href="https://github.com/vercel/next.js/tree/canary/examples"

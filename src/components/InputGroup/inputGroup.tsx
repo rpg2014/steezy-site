@@ -3,7 +3,7 @@ import { RiderLevels } from "../../models"
 import styles from './inputGroup.module.scss'
 
 interface InputGroupProps { label: string; 
-    type: HTMLInputTypeAttribute; 
+    type?: HTMLInputTypeAttribute; 
     value?: string; 
     name?: string;
     setFormState: (e: any) =>void;
@@ -34,7 +34,7 @@ export const InputGroup = (props: InputGroupProps ) => {
                 </select>
                 : <input 
                     className={`${styles.inputField} border`} 
-                    type={props.type} 
+                    type={props.type ? props.type : 'text'} 
                     name={props.name}
                     placeholder={props.placeholder? props.placeholder: props.label} 
                     value={props.value} 

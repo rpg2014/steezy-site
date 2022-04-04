@@ -1,0 +1,80 @@
+@import "/styles/components.module.scss";
+
+
+.ruleListPageContainer {
+    background-color: $dark;
+    color: $text-light;
+    opacity: 0.95;
+
+    border-radius: .2rem ;
+    width: 40rem;
+    height: fit-content;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    box-shadow: 0.14rem 0.25rem 0.25rem $secondary;
+    
+
+    @media (max-width: $breakpoint) {
+        width: 100%;
+    }
+    @media (min-width: $breakpoint) {
+        margin-bottom: 1rem;
+        
+    }
+}
+
+.title {
+    color: $text-light;
+    
+    padding-top: 2rem;
+    font-size: 24px;
+    text-align: center;
+    box-shadow: 3px, 1px, 1px black;
+}
+.subtitle{
+    margin-bottom: 0.5rem;
+}
+.ruleContainer {
+    background-color: $light;
+    color: $text-dark;
+    width: 75%;
+    align-items: center;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    border-radius: 2px;
+    padding: 0.5rem;
+
+    @media (max-width: $breakpoint) {
+        width: 100%;
+        border-radius: 0;
+    }
+
+    &:hover{
+      cursor: pointer;  
+      outline: $primary 2px solid
+    }
+}
+.ruleListContainer{
+   width: 100%;
+   display: flex;
+   flex-direction: column;
+   align-items: center;
+}
+.ruleName {
+    color: $black;
+}
+
+.frequency{
+    font-size: smaller;
+}
+
+.interactionContainer {
+    display: flex;
+    flex-direction: row-reverse;
+    justify-content: space-between;
+    margin: 1.5rem 2rem 1rem;
+    align-items: center;
+}
