@@ -5,7 +5,8 @@
     "dev": "next dev",
     "build": "next build && next export",
     "analyze": "ANALYZE=true next build",
-    "build-wasm": "wasm-pack build steezy-wasm ; jq '. + {type: \"module\", main: \"steezy-wasm.js\"} | del(.module)' steezy-wasm/pkg/package.json | sponge steezy-wasm/pkg/package.json",
+    "build-wasm-old": "wasm-pack build steezy-wasm ; jq '. + {type: \"module\", main: \"steezy-wasm.js\"} | del(.module)' steezy-wasm/pkg/package.json | sponge steezy-wasm/pkg/package.json",
+    "build-wasm": "wasm-pack build steezy-wasm",
     "link-wasm": "cd steezy-wasm/pkg ; npm link ; cd - ; npm link steezy-wasm",
     "start": "next start",
     "lint": "next lint"

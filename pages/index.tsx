@@ -12,12 +12,12 @@ import { useAuth } from '../src/hooks/useAuth'
 import { useSyncStatus } from '../src/hooks/useSyncStatus'
 import { Rider, Rule, Season } from '../src/models'
 import styles from '../styles/Home.module.scss'
-import { CalcuationEngine } from '../steezy-wasm/pkg/steezy_wasm'
+// import { CalcuationEngine } from '../steezy-wasm/pkg/steezy_wasm'
 import { useData } from '../src/hooks/useData'
 import { useSignedInRider } from '../src/hooks/useRider'
 
 
-let engine: CalcuationEngine;
+// let engine: CalcuationEngine;
 
 const Home: NextPage = () => {
 
