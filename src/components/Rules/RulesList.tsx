@@ -18,8 +18,8 @@ export type RulesListProps = {
 export const RulesList = (props: RulesListProps) => {
     const {data: rules} = useData(Rule)
     const {riderData } = useSignedInRider();
-    console.log("props.selectedRule: "+ props.selectedRule);
-    console.log("inital state: "+ props.selectedRule !== undefined ?  Array.isArray(props.selectedRule) ? props.selectedRule :[props.selectedRule]: [])
+    // console.log("props.selectedRule: "+ props.selectedRule);
+    // console.log("inital state: "+ props.selectedRule !== undefined ?  Array.isArray(props.selectedRule) ? props.selectedRule :[props.selectedRule]: [])
     
     const router = useRouter();
     const [selectedRuleIds, setSelectedRuleIds] = useState<string[]>(props.selectedRule !== undefined ?  Array.isArray(props.selectedRule) ? props.selectedRule :[props.selectedRule]: [])
@@ -37,9 +37,9 @@ export const RulesList = (props: RulesListProps) => {
         </div>
         <div className={styles.ruleListContainer}>
         {rules?.map(rule => {
-            console.log("selectedRuleIds: " + selectedRuleIds);
-            console.log("ruleId: " + rule.id);
-            console.log("includes: "+selectedRuleIds.includes(rule.id));
+            // console.log("selectedRuleIds: " + selectedRuleIds);
+            // console.log("ruleId: " + rule.id);
+            // console.log("includes: "+selectedRuleIds.includes(rule.id));
             
                         
             return <RuleComp key={rule.id} rule={rule} selected={selectedRuleIds.includes(rule.id)} addToSelected={() => {
@@ -104,7 +104,7 @@ const RuleComp = ({rule, selected, addToSelected}: {rule: Rule, selected?: boole
                 {
                     <div  className={combineStyles(styles.flexed, selected ? '': styles.remove)}>
                         {transitionFinished ? <>
-                            <Link passHref href={'/rules/create-rule?ruleId='+rule.id}><Button className={styles.button} onTransitionEnd={(e)=>e.stopPropagation()} size='sm' variant='outline-dark'>Edit Rule</Button></Link>
+                            <Link passHref href={'rules/create-rule?ruleId='+rule.id}><Button className={styles.button} onTransitionEnd={(e)=>e.stopPropagation()} size='sm' variant='outline-dark'>Edit Rule</Button></Link>
                         <Button disabled className={styles.button} onTransitionEnd={(e)=>e.stopPropagation()} size='sm' variant='outline-danger'>Delete </Button>
                         </>: null}
                     </div>

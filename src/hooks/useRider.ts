@@ -14,7 +14,7 @@ export const useSignedInRider = (): {riderData: Rider | undefined} => {
     const {syncReady} = useSyncStatus();
     useEffect(() => {
         if (signedIn && cognitoId ) {
-            console.log(`Query for: ${cognitoId}`)
+            // console.log(`Query for: ${cognitoId}`)
             DataStore.query(Rider, r => r.cognitoId('eq', cognitoId))
                 .then(riders => {
                     // console.log(`saving riders: ${JSON.stringify(riders)}`)
