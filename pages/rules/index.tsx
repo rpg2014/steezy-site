@@ -2,13 +2,14 @@ import { NextPage } from "next"
 import App from "next/app"
 import { useRouter } from "next/router"
 import React from "react"
-import { RuleComponent } from "../../src/components/Rules/RuleComponent"
+import { RulesList } from "../../src/components/Rules/RulesList"
 
 const RulePage: NextPage = () => {
     const router = useRouter();
     const {ruleId} = router.query;
     return (
-      <RuleComponent ruleId={ruleId} />
+        //todo: if rule is in query, highlight it? or zoom it in or single page or something? highlighting is easiest
+      <RulesList selectedRule={ruleId}/>
     )
 }
 

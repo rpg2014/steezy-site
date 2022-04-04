@@ -10,6 +10,15 @@
     display: flex;
     flex-direction: column;
     box-shadow: 0.14rem 0.25rem 0.25rem $secondary;
+    
+
+    @media (max-width: $breakpoint) {
+        width: 100%;
+    }
+    @media (min-width: $breakpoint) {
+        margin-bottom: 1rem;
+        
+    }
 }
 .form {
     padding-left: 3rem;
@@ -77,4 +86,9 @@
 .listItemActive {
     background-color: $dark;
     border: 2px solid $primary;
+}
+
+.successAlert {
+    margin-right: 3rem;
+    
 }

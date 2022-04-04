@@ -2,16 +2,11 @@
 import { initSchema } from '@aws-amplify/datastore';
 import { schema } from './schema';
 
-const ScaleType = {
-  "MULTIPLY": "MULTIPLY",
-  "ADDITION": "ADDITION"
-};
-
-const Period = {
-  "SEASONLY": "SEASONLY",
-  "MONTHLY": "MONTHLY",
-  "WEEKLY": "WEEKLY",
-  "DAILY": "DAILY",
+const Frequency = {
+  "SEASON": "SEASON",
+  "MONTH": "MONTH",
+  "WEEK": "WEEK",
+  "DAY": "DAY",
   "ANYTIME": "ANYTIME"
 };
 
@@ -22,15 +17,13 @@ const RiderLevels = {
   "GREEN": "GREEN"
 };
 
-const { Season, EarnedPoint, RuleScaling, Rider, Rule } = initSchema(schema);
+const { Season, EarnedPoint, Rider, Rule } = initSchema(schema);
 
 export {
   Season,
   EarnedPoint,
-  RuleScaling,
   Rider,
   Rule,
-  ScaleType,
-  Period,
+  Frequency,
   RiderLevels
 };

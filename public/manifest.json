@@ -13,6 +13,13 @@
         "src": "blueBird.png",
         "sizes": "900x900",
         "type": "image/png"
+      },
+      {
+          "src": "blueBird.mask.100x100.png",
+          "sizes": "111x111",
+          "type": "image/png",
+          "purpose": "maskable"
+
       }
     ],
     "theme_color": "#212529",

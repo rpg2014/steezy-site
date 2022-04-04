@@ -214,113 +214,6 @@ export const schema = {
                 }
             ]
         },
-        "RuleScaling": {
-            "name": "RuleScaling",
-            "fields": {
-                "id": {
-                    "name": "id",
-                    "isArray": false,
-                    "type": "ID",
-                    "isRequired": true,
-                    "attributes": []
-                },
-                "scaleType": {
-                    "name": "scaleType",
-                    "isArray": false,
-                    "type": {
-                        "enum": "ScaleType"
-                    },
-                    "isRequired": true,
-                    "attributes": []
-                },
-                "green": {
-                    "name": "green",
-                    "isArray": false,
-                    "type": "Float",
-                    "isRequired": true,
-                    "attributes": []
-                },
-                "blue": {
-                    "name": "blue",
-                    "isArray": false,
-                    "type": "Float",
-                    "isRequired": true,
-                    "attributes": []
-                },
-                "black": {
-                    "name": "black",
-                    "isArray": false,
-                    "type": "Float",
-                    "isRequired": true,
-                    "attributes": []
-                },
-                "doubleBlack": {
-                    "name": "doubleBlack",
-                    "isArray": false,
-                    "type": "Float",
-                    "isRequired": true,
-                    "attributes": []
-                },
-                "name": {
-                    "name": "name",
-                    "isArray": false,
-                    "type": "String",
-                    "isRequired": false,
-                    "attributes": []
-                },
-                "createdAt": {
-                    "name": "createdAt",
-                    "isArray": false,
-                    "type": "AWSDateTime",
-                    "isRequired": false,
-                    "attributes": [],
-                    "isReadOnly": true
-                },
-                "updatedAt": {
-                    "name": "updatedAt",
-                    "isArray": false,
-                    "type": "AWSDateTime",
-                    "isRequired": false,
-                    "attributes": [],
-                    "isReadOnly": true
-                }
-            },
-            "syncable": true,
-            "pluralName": "RuleScalings",
-            "attributes": [
-                {
-                    "type": "model",
-                    "properties": {}
-                },
-                {
-                    "type": "auth",
-                    "properties": {
-                        "rules": [
-                            {
-                                "groupClaim": "cognito:groups",
-                                "provider": "userPools",
-                                "allow": "groups",
-                                "groups": [
-                                    "commissioners"
-                                ],
-                                "operations": [
-                                    "read",
-                                    "create",
-                                    "update",
-                                    "delete"
-                                ]
-                            },
-                            {
-                                "allow": "private",
-                                "operations": [
-                                    "read"
-                                ]
-                            }
-                        ]
-                    }
-                }
-            ]
-        },
         "Rider": {
             "name": "Rider",
             "fields": {
@@ -458,19 +351,12 @@ export const schema = {
                     "isRequired": true,
                     "attributes": []
                 },
-                "period": {
-                    "name": "period",
+                "frequency": {
+                    "name": "frequency",
                     "isArray": false,
                     "type": {
-                        "enum": "Period"
+                        "enum": "Frequency"
                     },
-                    "isRequired": true,
-                    "attributes": []
-                },
-                "basePoints": {
-                    "name": "basePoints",
-                    "isArray": false,
-                    "type": "Int",
                     "isRequired": true,
                     "attributes": []
                 },
@@ -488,18 +374,25 @@ export const schema = {
                         "associatedWith": "ruleID"
                     }
                 },
-                "RuleScaling": {
-                    "name": "RuleScaling",
+                "levelPointsMap": {
+                    "name": "levelPointsMap",
+                    "isArray": false,
+                    "type": "AWSJSON",
+                    "isRequired": true,
+                    "attributes": []
+                },
+                "lastEditedBy": {
+                    "name": "lastEditedBy",
                     "isArray": false,
                     "type": {
-                        "model": "RuleScaling"
+                        "model": "Rider"
                     },
-                    "isRequired": true,
+                    "isRequired": false,
                     "attributes": [],
                     "association": {
                         "connectionType": "HAS_ONE",
                         "associatedWith": "id",
-                        "targetName": "ruleRuleScalingId"
+                        "targetName": "ruleLastEditedById"
                     }
                 },
                 "createdAt": {
@@ -518,11 +411,11 @@ export const schema = {
                     "attributes": [],
                     "isReadOnly": true
                 },
-                "ruleRuleScalingId": {
-                    "name": "ruleRuleScalingId",
+                "ruleLastEditedById": {
+                    "name": "ruleLastEditedById",
                     "isArray": false,
                     "type": "ID",
-                    "isRequired": true,
+                    "isRequired": false,
                     "attributes": []
                 }
             },
@@ -556,6 +449,18 @@ export const schema = {
                                     "update",
                                     "delete"
                                 ]
+                            },
+                            {
+                                "provider": "userPools",
+                                "ownerField": "owner",
+                                "allow": "owner",
+                                "identityClaim": "cognito:username",
+                                "operations": [
+                                    "create",
+                                    "update",
+                                    "delete",
+                                    "read"
+                                ]
                             }
                         ]
                     }
@@ -564,20 +469,13 @@ export const schema = {
         }
     },
     "enums": {
-        "ScaleType": {
-            "name": "ScaleType",
+        "Frequency": {
+            "name": "Frequency",
             "values": [
-                "MULTIPLY",
-                "ADDITION"
-            ]
-        },
-        "Period": {
-            "name": "Period",
-            "values": [
-                "SEASONLY",
-                "MONTHLY",
-                "WEEKLY",
-                "DAILY",
+                "SEASON",
+                "MONTH",
+                "WEEK",
+                "DAY",
                 "ANYTIME"
             ]
         },
@@ -592,5 +490,5 @@ export const schema = {
         }
     },
     "nonModels": {},
-    "version": "d2a25a883de15c6eeb5cbed55fde9530"
+    "version": "5e96d6f9a7e00de06ca854dbab3a03cd"
 };

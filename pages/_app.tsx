@@ -58,16 +58,17 @@ function MyApp({ Component, pageProps }: AppProps) {
     })
 
  
-    const listener = (data: { payload: HubPayload }) => {
-        // console.log(`[DATASTORE] New event: ${JSON.stringify(data)}`)
-        if (data.payload.event === "outboxMutationFailed") {
-            errorNotify(data.payload);
-        }
-    }
+    
     useEffect(() => {
+        const listener = (data: { payload: HubPayload }) => {
+            // console.log(`[DATASTORE] New event: ${JSON.stringify(data)}`)
+            if (data.payload.event === "outboxMutationFailed") {
+                errorNotify(data.payload);
+            }
+        }
         Hub.listen('datastore', listener)
         return () => Hub.remove('datastore', listener)
-    },[listener])
+    },[])
 
     // TODO: setup a datastore sync waiter here if the store is empty?
   

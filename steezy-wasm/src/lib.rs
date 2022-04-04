@@ -36,7 +36,7 @@ pub struct Season {
 #[derive(Serialize, Deserialize, Clone, Debug)]
 pub struct Rule{
     pub id: String,
-    pub base_points: f64,
+    pub base_points: usize,
     pub rule_scaling_id: String
 }
 
@@ -68,7 +68,7 @@ impl CalcuationEngine {
         rule_scalings: Vec<JsValue>,
         seasons: Vec<JsValue>
     ) -> CalcuationEngine {
-
+        console_error_panic_hook::set_once();
 
         CalcuationEngine {
             internalState: InternalState::new(rules, rule_scalings, seasons)
