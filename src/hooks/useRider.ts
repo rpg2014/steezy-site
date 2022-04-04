@@ -1,5 +1,6 @@
 import { DataStore } from "aws-amplify";
 import { useEffect, useState } from "react";
+import { ZenObservable } from "zen-observable-ts";
 import { Rider } from "../models";
 import { useAuth } from "./useAuth";
 import { useSyncStatus } from "./useSyncStatus";
@@ -12,20 +13,21 @@ export const useSignedInRider = (): {riderData: Rider | undefined} => {
     const {signedIn, cognitoId} = useAuth();
     // not sure if the below is needed, might impact performance.  
     const {syncReady} = useSyncStatus();
+    let subscription: ZenObservable.Subscription;
     useEffect(() => {
         if (signedIn && cognitoId ) {
             // console.log(`Query for: ${cognitoId}`)
-            DataStore.query(Rider, r => r.cognitoId('eq', cognitoId))
-                .then(riders => {
-                    // console.log(`saving riders: ${JSON.stringify(riders)}`)
-                    setRiderData(riders[0])
-
-                }).catch(console.error);
+            subscription =DataStore.observeQuery(Rider, r => r.cognitoId('eq', cognitoId))
+                .subscribe(snapshot => {
+                    console.log("in rider subscripton: "+JSON.stringify(snapshot))
+                    setRiderData(snapshot.items[0])
+                })
+                return ()=> subscription.unsubscribe()
         } else {
             setRiderData(undefined)
         }
-
-    }, [cognitoId, signedIn, syncReady])
+         
+    }, [cognitoId, signedIn])
 
     return {riderData}
 }

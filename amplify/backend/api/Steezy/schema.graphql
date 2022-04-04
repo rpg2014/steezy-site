@@ -44,6 +44,6 @@ type Rule @model @auth(rules: [{allow: private, operations: [read]}, {allow: gro
   frequency: Frequency!
   earnedPoints: [EarnedPoint] @hasMany(indexName: "byRule", fields: ["id"])
   levelPointsMap: AWSJSON!
-  lastEditedBy: Rider @hasOne
+  lastEditedByCognitoId: ID
 }
  

@@ -76,10 +76,9 @@ export declare class Rule {
   readonly frequency: Frequency | keyof typeof Frequency;
   readonly earnedPoints?: (EarnedPoint | null)[] | null;
   readonly levelPointsMap: string;
-  readonly lastEditedBy?: Rider | null;
+  readonly lastEditedByCognitoId?: string | null;
   readonly createdAt?: string | null;
   readonly updatedAt?: string | null;
-  readonly ruleLastEditedById?: string | null;
   constructor(init: ModelInit<Rule, RuleMetaData>);
   static copyOf(source: Rule, mutator: (draft: MutableModel<Rule, RuleMetaData>) => MutableModel<Rule, RuleMetaData> | void): Rule;
 }

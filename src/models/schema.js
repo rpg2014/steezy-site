@@ -381,19 +381,12 @@ export const schema = {
                     "isRequired": true,
                     "attributes": []
                 },
-                "lastEditedBy": {
-                    "name": "lastEditedBy",
+                "lastEditedByCognitoId": {
+                    "name": "lastEditedByCognitoId",
                     "isArray": false,
-                    "type": {
-                        "model": "Rider"
-                    },
+                    "type": "ID",
                     "isRequired": false,
-                    "attributes": [],
-                    "association": {
-                        "connectionType": "HAS_ONE",
-                        "associatedWith": "id",
-                        "targetName": "ruleLastEditedById"
-                    }
+                    "attributes": []
                 },
                 "createdAt": {
                     "name": "createdAt",
@@ -410,13 +403,6 @@ export const schema = {
                     "isRequired": false,
                     "attributes": [],
                     "isReadOnly": true
-                },
-                "ruleLastEditedById": {
-                    "name": "ruleLastEditedById",
-                    "isArray": false,
-                    "type": "ID",
-                    "isRequired": false,
-                    "attributes": []
                 }
             },
             "syncable": true,
@@ -490,5 +476,5 @@ export const schema = {
         }
     },
     "nonModels": {},
-    "version": "5e96d6f9a7e00de06ca854dbab3a03cd"
+    "version": "fe349bf95fd4767baf9775efda590322"
 };
