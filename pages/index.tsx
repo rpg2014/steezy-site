@@ -31,6 +31,7 @@ const Home: NextPage = () => {
     const auth = useAuth();
     const { cognitoId, name, email, signedIn } = auth;
 
+
     
 
 
@@ -49,7 +50,7 @@ const Home: NextPage = () => {
                     <p>
                         UserId is {cognitoId}
                         <br />
-                        Name is {name}
+                        Name is {riderData?.name}
                         <br />
                         email is {email}
                         <br />

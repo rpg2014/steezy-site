@@ -3,6 +3,7 @@ import { error } from "console"
 import Link from "next/link"
 import React, { useEffect, useState } from "react"
 import { Spinner, Button, Alert, ListGroup } from "react-bootstrap"
+import { toast } from "react-toastify"
 import { useAsyncAction } from "../../hooks/useAsyncAction"
 import { useAuth } from "../../hooks/useAuth"
 import { useData } from "../../hooks/useData"
@@ -42,6 +43,7 @@ export const CreateRuleForm = ({ruleId }: {ruleId?: string | null}) =>  {
     const[loading, setLoading] = useState(ruleId ?true: false);
 
     const{riderData} = useSignedInRider();
+    const {signedIn, cognitoId} = useAuth();
 
     useEffect(()=> {
         const getRuleToEdit  = async () => {
@@ -87,7 +89,7 @@ export const CreateRuleForm = ({ruleId }: {ruleId?: string | null}) =>  {
                     updated.name = formState.name;
                     updated.description = formState.description;
                     updated.frequency = formState.frequency;
-                    updated.lastEditedBy = riderData;
+                    updated.lastEditedByCognitoId = cognitoId;
                     updated.levelPointsMap = JSON.stringify({
                         greenPoints: formState.greenPoints,
                         bluePoints: formState.bluePoints,
@@ -100,7 +102,7 @@ export const CreateRuleForm = ({ruleId }: {ruleId?: string | null}) =>  {
                         name: formState.name,
                         description: formState.description,
                         frequency: formState.frequency,
-                        lastEditedBy: riderData,
+                        lastEditedByCognitoId: cognitoId,
                         levelPointsMap: JSON.stringify({
                             greenPoints: formState.greenPoints,
                             bluePoints: formState.bluePoints,
@@ -115,6 +117,7 @@ export const CreateRuleForm = ({ruleId }: {ruleId?: string | null}) =>  {
                     name: formState.name,
                     description: formState.description,
                     frequency: formState.frequency,
+                    lastEditedByCognitoId: cognitoId,
                     levelPointsMap: JSON.stringify({
                         greenPoints: formState.greenPoints,
                         bluePoints: formState.bluePoints,
@@ -126,9 +129,25 @@ export const CreateRuleForm = ({ruleId }: {ruleId?: string | null}) =>  {
             }
         }
     }
+    const successPopover = () => toast.success(ruleId ?'Rule Updated!': "Rule Created!",
+        {
+            position: "bottom-center",
+            autoClose: 3000,
+            hideProgressBar: true,
+            closeOnClick: false,
+            pauseOnHover: false,
+            draggable: true,
+            progress: undefined,
+            theme: 'dark',
+        })
 
-    const {data, error, loading:submitLoading, execute} = useAsyncAction<Rule>(onSubmit)
+    const {data, error, loading:submitLoading, execute} = useAsyncAction<Rule>(()=>  onSubmit().then(e=>{successPopover(); return e}))
 
+    if(!signedIn) {
+        return <Alert className={styles.errorAlert} variant='danger'>
+        You must sign in to create a rule
+    </Alert>
+    }
 
     return (
         <div className={styles.createRuleContainer}>
@@ -151,13 +170,14 @@ export const CreateRuleForm = ({ruleId }: {ruleId?: string | null}) =>  {
 
 
                 <div className={styles.interactionContainer}>
-                    {submitLoading ? <Spinner animation='border' variant="light" /> : <Button variant='light' onClick={execute}>Submit</Button>}
+                    {submitLoading ? <Spinner animation='border' variant="light" /> :
+                    !data? <Button variant='light' onClick={execute}>Submit</Button>: <Link passHref href={`/rules?ruleId=${data.id}`}><Button variant='outline-light'>See Rule List</Button></Link>}
 
                 </div>
                 {error && <Alert className={styles.errorAlert} variant='danger'>
                     {error.message}
                 </Alert>}
-                {data && <Alert className={styles.successAlert} variant='success'>Success! {ruleId ? 'Edited' :'Created'} rule {data.name}</Alert>}
+                {/* {data && <Alert className={styles.successAlert} variant='success'>Success! {ruleId ? 'Edited' :'Created'} rule {data.name}</Alert>} */}
             </div>
                  {/* <Spinner animation='border' variant="light" /> */}
         </div>

@@ -13,3 +13,19 @@ export const useData =<T extends PersistentModel>(type: PersistentModelConstruct
     return {data}
 }
 
+export const useUpdatingData=<T extends PersistentModel>(type: PersistentModelConstructor<T>) => {
+    const [data, setData] = useState<T[]>();
+    const [isSynced, setIsSynced] = useState<boolean>(false);
+    const {signedIn } = useAuth()
+    useEffect(()=> {
+        let subscription = DataStore.observeQuery(type).subscribe(snapshot => {
+            // console.log("in subscription: "+snapshot)
+            setData(snapshot.items)
+            setIsSynced(snapshot.isSynced)
+        });
+        return () => subscription.unsubscribe()
+    },[signedIn])
+
+    return {data, isSynced}
+}
+

@@ -57,7 +57,7 @@
 
     &:hover{
       cursor: pointer;  
-      outline: $primary 2px solid
+      outline: $secondary 2px solid
     }
 }
 .ruleListContainer{
@@ -124,7 +124,7 @@
 
 .selected{
     // height: 200px;   
-    border: $primary 2px solid;
+    border: $secondary 2px solid;
     border-radius:2px;
     background-color: $gray-300;
 }
