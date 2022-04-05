@@ -151,11 +151,14 @@ export const CreateRuleForm = ({ruleId }: {ruleId?: string | null}) =>  {
 
     return (
         <div className={styles.createRuleContainer}>
+            {loading ? <Spinner animation='border' />
+            : <>
             <div className={styles.title}  >
                 {ruleId ? 'Edit Rule' : 'Create Rule'}
             </div>
+            
             <div className={styles.seeAllRulesDiv}>
-                Search the  <Link href='/rules'>rule's</Link> to make sure the rule doesn't already exist
+                Search the  <Link passHref href='/rules'>rule's</Link> to make sure the rule doesn't already exist
             </div>
             {/* {!loading ? */}
              <div className={styles.form}>
@@ -179,6 +182,9 @@ export const CreateRuleForm = ({ruleId }: {ruleId?: string | null}) =>  {
                 </Alert>}
                 {/* {data && <Alert className={styles.successAlert} variant='success'>Success! {ruleId ? 'Edited' :'Created'} rule {data.name}</Alert>} */}
             </div>
+            </>
+}
+            
                  {/* <Spinner animation='border' variant="light" /> */}
         </div>
     )

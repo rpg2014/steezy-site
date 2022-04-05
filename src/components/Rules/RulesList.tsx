@@ -19,9 +19,8 @@ export type RulesListProps = {
 
 export const RulesList = (props: RulesListProps) => {
     const { data: rules, isSynced } = useUpdatingData(Rule);
-    const[displayedRules, setDisplayedRules] = useState(rules)
+    const [displayedRules, setDisplayedRules] = useState(rules)
 
-    
     const { riderData } = useSignedInRider();
     // console.log("props.selectedRule: "+ props.selectedRule);
     // console.log("inital state: "+ props.selectedRule !== undefined ?  Array.isArray(props.selectedRule) ? props.selectedRule :[props.selectedRule]: [])
@@ -46,7 +45,7 @@ export const RulesList = (props: RulesListProps) => {
             List of Rules
         </div>
         <div className={styles.subtitle}>
-            {`Showing points for ${riderData?.riderLevel.toLocaleLowerCase()} level riders`}
+            {/* {`Showing points for ${riderData?.riderLevel.toLocaleLowerCase()} level riders`} */}
         </div>
         <div className={styles.ruleListContainer}>
             {!rules && <Spinner animation='border' variant="light" />}
@@ -80,7 +79,7 @@ export const RulesList = (props: RulesListProps) => {
 
 const RuleComp = ({ rule, selected, addToSelected }: { rule: Rule, selected?: boolean, addToSelected: () => void }) => {
     const { riderData } = useSignedInRider();
-    const {isCommish, cognitoId} = useAuth();
+    const { isCommish, cognitoId } = useAuth();
     const [transitionFinished, setTransitionFinished] = useState(selected);
     // console.log(`${rule.id}: ${transitionFinished}: ${selected}`)
     const pointEntries = Object.entries(rule.levelPointsMap)
@@ -92,7 +91,7 @@ const RuleComp = ({ rule, selected, addToSelected }: { rule: Rule, selected?: bo
 
     return (
         //If selected, expand and show buttons for edit and add points  or maybe have add points button always present?
-        <div key={rule.id} className={combineStyles(styles.ruleContainer, transitionFinished ? styles.selected : '')} onTransitionEnd={() => setTransitionFinished(!transitionFinished)} onClick={addToSelected} >
+        <div className={combineStyles(styles.ruleContainer, transitionFinished ? styles.selected : '')} onTransitionEnd={() => setTransitionFinished(!transitionFinished)} onClick={addToSelected} >
             <div className={styles.infoSection}>
                 <div className={styles.ruleTextContainer}>
                     <h4 className={styles.ruleName}>{rule.name}</h4>
@@ -108,14 +107,11 @@ const RuleComp = ({ rule, selected, addToSelected }: { rule: Rule, selected?: bo
             {
                 <div className={combineStyles(styles.flexed, selected ? '' : styles.remove)}>
                     {transitionFinished ? <>
-                    {/* Below link isn't working for some reason */}
-                        <Link passHref href={'/rules/create-rule?ruleId=' + rule.id}><a><Button className={styles.button} onTransitionEnd={(e) => e.stopPropagation()} size='sm' variant='outline-dark'>Edit Rule</Button></a></Link>
-                        <Button disabled={rule.lastEditedByCognitoId !== cognitoId && !isCommish} className={styles.button} onClick={()=> DataStore.delete(Rule,rule.id)} onTransitionEnd={(e) => e.stopPropagation()} size='sm' variant='outline-danger'>Delete </Button>
+                        <Link passHref href={'/rules/create-rule?ruleId=' + rule.id}><Button className={styles.button} onClick={(e) => e.stopPropagation()} onTransitionEnd={(e) => e.stopPropagation()} size='sm' variant='outline-dark'>Edit Rule</Button></Link>
+                        <Button disabled={rule.lastEditedByCognitoId !== cognitoId && !isCommish} className={styles.button} onClick={() => DataStore.delete(Rule, rule.id)} onTransitionEnd={(e) => e.stopPropagation()} size='sm' variant='outline-danger'>Delete </Button>
                     </> : null}
                 </div>
             }
-
-
 
         </div>
     )

@@ -52,6 +52,7 @@ module.exports = withBundleAnalyzer(withPWA(
             disable: process.env.NODE_ENV === 'development',
             register: false,
             skipWaiting: false,
+            cacheOnFrontEndNav: true
         }
     }
 ));
