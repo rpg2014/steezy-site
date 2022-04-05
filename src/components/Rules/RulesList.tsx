@@ -45,7 +45,7 @@ export const RulesList = (props: RulesListProps) => {
             List of Rules
         </div>
         <div className={styles.subtitle}>
-            {/* {`Showing points for ${riderData?.riderLevel.toLocaleLowerCase()} level riders`} */}
+            {`Showing points for ${riderData?.riderLevel.toLocaleLowerCase()} level riders`}
         </div>
         <div className={styles.ruleListContainer}>
             {!rules && <Spinner animation='border' variant="light" />}

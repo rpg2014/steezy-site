@@ -37,7 +37,7 @@ type Rider @model @auth(rules: [{allow: groups, groups: ["commissioners"], opera
   cognitoId: String!
 }
 
-type Rule @model @auth(rules: [{allow: private, operations: [read]}, {allow: groups, groups: ["commissioners"], operations: [read, create, update, delete]}, {allow: owner}]) {
+type Rule @model @auth(rules: [{allow: private, operations: [read, update]}, {allow: groups, groups: ["commissioners"], operations: [read, create, update, delete]}, {allow: owner}]) {
   id: ID!
   name: String!
   description: String!
