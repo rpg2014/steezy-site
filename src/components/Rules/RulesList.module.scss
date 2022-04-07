@@ -36,6 +36,7 @@
 }
 .subtitle{
     margin-bottom: 0.5rem;
+    cursor: pointer;
 }
 .ruleContainer {
     background-color: $light;
@@ -136,4 +137,34 @@
 }
 .button {
     margin: 0.5rem 0.1rem
+}
+
+
+//Search bar
+
+.searchBarContainer {
+    margin: 0.5rem 1rem 0.5rem;
+    
+    
+}
+
+.searchInput {
+    background-color: $secondary; 
+    outline: 0 $light;   
+    border: 0;
+    color: $text-light;
+    border-radius: 3px;
+    // margin-right: 2rem;
+    // &:active
+    // &:focus
+    transition: box-shadow $transition-time ease-in-out;
+    &:hover {
+        outline: $light 1px solid;
+        box-shadow: 2px 2px 2px rgba($black, $alpha: .7);
+        // outline
+    }
+    &:focus {
+        outline: $light 1px solid;
+        box-shadow: 2px 2px 2px rgba($black, $alpha: .7);
+    }
 }

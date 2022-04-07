@@ -14,7 +14,7 @@ const RulePage: NextPage = () => {
         <Head>
                 <title>Steezy Rules</title>
             </Head>
-      <RulesList selectedRule={ruleId}/>
+        <RulesList selectedRule={ruleId}/>
       </>
     )
 }

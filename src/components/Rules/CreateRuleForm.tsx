@@ -1,5 +1,4 @@
 import { DataStore } from "aws-amplify"
-import { error } from "console"
 import Link from "next/link"
 import React, { useEffect, useState } from "react"
 import { Spinner, Button, Alert, ListGroup } from "react-bootstrap"
@@ -41,6 +40,7 @@ export const CreateRuleForm = ({ ruleId }: { ruleId?: string | null }) => {
     const [formState, setFormState] = useState<FormState>(initalFormState)
 
     const [loading, setLoading] = useState(ruleId ? true : false);
+    const [error, setError] = useState();
 
     const { riderData } = useSignedInRider();
     const { signedIn, cognitoId } = useAuth();
@@ -48,24 +48,31 @@ export const CreateRuleForm = ({ ruleId }: { ruleId?: string | null }) => {
     useEffect(() => {
         const getRuleToEdit = async () => {
             if (ruleId) {
+                setError(undefined);
                 setLoading(true)
-                const original = await DataStore.query(Rule, ruleId)
-                if (original) {
-                    setFormState({
-                        name: original.name,
-                        description: original.description,
-                        frequency: original.frequency as Frequency,
-                        //@ts-ignore: We verify that green is present, before getting
-                        greenPoints: riderLevelToPointsMap.has(RiderLevels.GREEN) ? original.levelPointsMap[riderLevelToPointsMap.get(RiderLevels.GREEN)] : 0,
-                        //@ts-ignore: We verify that green is present, before getting
-                        bluePoints: riderLevelToPointsMap.has(RiderLevels.BLUE) ? original.levelPointsMap[riderLevelToPointsMap.get(RiderLevels.BLUE)] : 0,
-                        //@ts-ignore: We verify that green is present, before getting
-                        blackPoints: riderLevelToPointsMap.has(RiderLevels.BLACK) ? original.levelPointsMap[riderLevelToPointsMap.get(RiderLevels.BLACK)] : 0,
-                        //@ts-ignore: We verify that green is present, before getting
-                        doubleBlackPoints: riderLevelToPointsMap.has(RiderLevels.DOUBLEBLACK) ? original.levelPointsMap[riderLevelToPointsMap.get(RiderLevels.DOUBLEBLACK)] : 0,
-                    })
-                    setLoading(false)
+                try{
+                    const original = await DataStore.query(Rule, ruleId)
+                    if (original) {
+                        setFormState({
+                            name: original.name,
+                            description: original.description,
+                            frequency: original.frequency as Frequency,
+                            //@ts-ignore: We verify that green is present, before getting
+                            greenPoints: riderLevelToPointsMap.has(RiderLevels.GREEN) ? original.levelPointsMap[riderLevelToPointsMap.get(RiderLevels.GREEN)] : 0,
+                            //@ts-ignore: We verify that green is present, before getting
+                            bluePoints: riderLevelToPointsMap.has(RiderLevels.BLUE) ? original.levelPointsMap[riderLevelToPointsMap.get(RiderLevels.BLUE)] : 0,
+                            //@ts-ignore: We verify that green is present, before getting
+                            blackPoints: riderLevelToPointsMap.has(RiderLevels.BLACK) ? original.levelPointsMap[riderLevelToPointsMap.get(RiderLevels.BLACK)] : 0,
+                            //@ts-ignore: We verify that green is present, before getting
+                            doubleBlackPoints: riderLevelToPointsMap.has(RiderLevels.DOUBLEBLACK) ? original.levelPointsMap[riderLevelToPointsMap.get(RiderLevels.DOUBLEBLACK)] : 0,
+                        })
+                        setLoading(false)
+                    }
+                    setLoading(false);
+                }catch(err: any) {
+                    setError(err)
                 }
+                
             }
         }
         getRuleToEdit();
@@ -75,11 +82,10 @@ export const CreateRuleForm = ({ ruleId }: { ruleId?: string | null }) => {
     const onSubmit = () => {
 
         if (!formState.name || !formState.description || !formState.frequency) {
-            throw new Error("Missing a field, double check the form")
-        } else if (formState.greenPoints === 0 && formState.bluePoints === 0 && formState.blackPoints === 0 && formState.doubleBlackPoints) {
-            throw new Error("Cant create rule with points as all 0");
+            throw new Error("Missing a field, double check the form");
+        } else if (formState.greenPoints === 0 && formState.bluePoints === 0 && formState.blackPoints === 0 && formState.doubleBlackPoints === 0) {
+            throw new Error("Can't create a rule with all points as 0");
         } else {
-            //TODO: if prop ruleId is present, edit exsisting rule, else new rule
             // Long term todo: if name is same or similar, suggest rule to edit instead, see comment below
             if (ruleId) {
 
@@ -143,7 +149,7 @@ export const CreateRuleForm = ({ ruleId }: { ruleId?: string | null }) => {
             theme: 'dark',
         })
 
-    const { data, error, loading: submitLoading, execute } = useAsyncAction<Rule>(() => onSubmit().then(e => { successPopover(); return e }))
+    const { data, error: submitError, loading: submitLoading, execute } = useAsyncAction<Rule>(() => onSubmit().then(e => { successPopover(); return e }).catch(e => {throw e;}))
 
     if (!signedIn) {
         return <Alert className={styles.errorAlert} variant='danger'>
@@ -176,13 +182,13 @@ export const CreateRuleForm = ({ ruleId }: { ruleId?: string | null }) => {
 
                         <div className={styles.interactionContainer}>
                             {submitLoading ? <Spinner animation='border' variant="light" /> :
-                                !data ? <Button variant='light' onClick={execute}>Submit</Button> : <Link passHref href={`/rules?ruleId=${data.id}`}><Button variant='outline-light'>See Rule List</Button></Link>}
+                                !data ? <Button variant='light' onClick={execute}>Submit</Button> : <Link passHref href={`/rules?ruleId=${data.id}`}><Button variant='outline-success'>See Rule List</Button></Link>}
 
                         </div>
-                        {error && <Alert className={styles.errorAlert} variant='danger'>
-                            {error.message}
+                        {submitError && !data &&<Alert className={styles.alert} variant='danger'>
+                            {submitError.message}
                         </Alert>}
-                        {/* {data && <Alert className={styles.successAlert} variant='success'>Success! {ruleId ? 'Edited' :'Created'} rule {data.name}</Alert>} */}
+                        {/* {data && <Alert className={styles.alert} variant='success'>Success! {ruleId ? 'Edited' :'Created'} rule {data.name}</Alert>} */}
                     </div>
                 </>
             }

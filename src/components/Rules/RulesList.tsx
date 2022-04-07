@@ -9,6 +9,8 @@ import { useRouter } from 'next/router';
 import { combineStyles, riderLevelToPointsMap } from '../../utils/utils';
 import { DataStore } from 'aws-amplify';
 import { useAuth } from '../../hooks/useAuth';
+import { RuleComponent } from './Rule';
+import FuzzySearch from 'fuzzy-search';
 
 
 export type RulesListProps = {
@@ -19,14 +21,20 @@ export type RulesListProps = {
 
 export const RulesList = (props: RulesListProps) => {
     const { data: rules, isSynced } = useUpdatingData(Rule);
+    const [selectedRuleIds, setSelectedRuleIds] = useState<string[]>(props.selectedRule !== undefined ? Array.isArray(props.selectedRule) ? props.selectedRule : [props.selectedRule] : [])
     const [displayedRules, setDisplayedRules] = useState(rules)
+    const [searchString, setSearchString] = useState<string| undefined>(undefined);
+    const [searchObject, setSearchObject] = useState<FuzzySearch<Rule> | null>(null);
+    const [showAllPoints, setShowAllPoints] = useState(false);
+
+    //eventually save this in local storage.  
+    const [showFilters, setShowFilters] = useState(false);
 
     const { riderData } = useSignedInRider();
     // console.log("props.selectedRule: "+ props.selectedRule);
     // console.log("inital state: "+ props.selectedRule !== undefined ?  Array.isArray(props.selectedRule) ? props.selectedRule :[props.selectedRule]: [])
 
     const router = useRouter();
-    const [selectedRuleIds, setSelectedRuleIds] = useState<string[]>(props.selectedRule !== undefined ? Array.isArray(props.selectedRule) ? props.selectedRule : [props.selectedRule] : [])
 
     // set the selected rules from the query props
     useEffect(() => {
@@ -37,20 +45,31 @@ export const RulesList = (props: RulesListProps) => {
     // will be used for when there are filters more
     // is rn unneccessary
     useEffect(()=>{
+        if(rules){
+            setSearchObject(new FuzzySearch(rules, ['name','description'],{caseSensitive: false, sort: true}))
+        }
         setDisplayedRules(rules)
     },[rules])
+
+    const searchFunction = () => setDisplayedRules( searchObject?.search(searchString))
 
     return <div className={styles.ruleListPageContainer}>
         <div className={styles.title}  >
             List of Rules
         </div>
-        <div className={styles.subtitle}>
-            {`Showing points for ${riderData?.riderLevel.toLocaleLowerCase()} level riders`}
+        <div className={styles.subtitle} onClick={()=> setShowAllPoints(!showAllPoints)}>
+            {`Showing points for ${showAllPoints ? 'all' : riderData?.riderLevel.toLocaleLowerCase()} level riders`}
         </div>
+        {rules &&
+        <div className={styles.searchBarContainer}>
+            <SearchBar onKeyUp={()=> searchFunction()} setValue={(value: string)=> setSearchString(value)} />   
+            {/* <Button variant='outline-light' size='sm' className={styles.filterButton}>Filters</Button> */}
+            </div>
+        }
         <div className={styles.ruleListContainer}>
             {!rules && <Spinner animation='border' variant="light" />}
             {displayedRules?.map(rule => {
-                return <RuleComp key={rule.id} rule={rule} selected={selectedRuleIds.includes(rule.id)} addToSelected={() => {
+                return <RuleComponent showAllPoints={showAllPoints} key={rule.id} rule={rule} selected={selectedRuleIds.includes(rule.id)} addToSelected={() => {
                     const params: URLSearchParams = new URLSearchParams()
                     let newList: string[];
                     if (!selectedRuleIds.includes(rule.id)) {
@@ -76,43 +95,22 @@ export const RulesList = (props: RulesListProps) => {
 }
 
 
-
-const RuleComp = ({ rule, selected, addToSelected }: { rule: Rule, selected?: boolean, addToSelected: () => void }) => {
-    const { riderData } = useSignedInRider();
-    const { isCommish, cognitoId } = useAuth();
-    const [transitionFinished, setTransitionFinished] = useState(selected);
-    // console.log(`${rule.id}: ${transitionFinished}: ${selected}`)
-    const pointEntries = Object.entries(rule.levelPointsMap)
-    try {
-        // pointEntries.unshift(pointEntries.pop())
-    } catch (e) {
-        // catch undefined
-    }
-
+const SearchBar = ({onKeyUp, setValue, value}:{onKeyUp: ()=> void, setValue: (value: string)=> void, value?: string}) => {
+ 
     return (
-        //If selected, expand and show buttons for edit and add points  or maybe have add points button always present?
-        <div className={combineStyles(styles.ruleContainer, transitionFinished ? styles.selected : '')} onTransitionEnd={() => setTransitionFinished(!transitionFinished)} onClick={addToSelected} >
-            <div className={styles.infoSection}>
-                <div className={styles.ruleTextContainer}>
-                    <h4 className={styles.ruleName}>{rule.name}</h4>
-                    <div className={styles.ruleDescription}>{rule.description}</div>
-                    <div className={styles.frequency}>{`You can earn this every ${rule.frequency.toLocaleLowerCase()}`}</div>
-                </div>
-                {riderData
-                    //@ts-ignore: We verify the rider level is in the map or we show 0
-                    ? <h4 className={styles.points}>{`Points: ${riderLevelToPointsMap.has(riderData.riderLevel as RiderLevels) ? rule.levelPointsMap[riderLevelToPointsMap.get(riderData.riderLevel)] : '0'}`}</h4>
-                    : (<div className={styles.pointsList}>{pointEntries.map(([k, v]) => <div key={k} className={styles.pointsListItem}>{`${k}: ${v}`}</div>)}</div>)
-                }
-            </div>
-            {
-                <div className={combineStyles(styles.flexed, selected ? '' : styles.remove)}>
-                    {transitionFinished ? <>
-                        <Link passHref href={'/rules/create-rule?ruleId=' + rule.id}><Button className={styles.button} onClick={(e) => e.stopPropagation()} onTransitionEnd={(e) => e.stopPropagation()} size='sm' variant='outline-dark'>Edit Rule</Button></Link>
-                        <Button disabled={rule.lastEditedByCognitoId !== cognitoId && !isCommish} className={styles.button} onClick={() => DataStore.delete(Rule, rule.id)} onTransitionEnd={(e) => e.stopPropagation()} size='sm' variant='outline-danger'>Delete </Button>
-                    </> : null}
-                </div>
-            }
-
-        </div>
+        <>
+                <input 
+                    className={styles.searchInput} 
+                    type={'text'} 
+                    name={'searchBox'}
+                    placeholder={'Search'} 
+                    onKeyUp={onKeyUp}
+                    value={value} 
+                    onInput={(event:any)=> {
+                        setValue(event.target.value);
+                    }} />
+             
+          </>  
     )
 }
+

@@ -10,14 +10,20 @@ export const useAsyncAction = <T>(fn: ()=> Promise<any>)=> {
 
     execute = () => {
         setIsLoading(true);
-        fn().then(result => {
-            setIsLoading(false)
-            setData(result)
-        })
-        .catch((err) => {
+        try{
+            fn().then(result => {
+                setIsLoading(false)
+                setData(result)
+            })
+            .catch((err) => {
+                console.log("in Error: "+ JSON.stringify(err))
+                setError(err);
+                setIsLoading(false);
+            })
+        }catch(err: Error | any) {
             setError(err);
             setIsLoading(false);
-        })
+        }
     }
 
 
