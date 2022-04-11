@@ -1,0 +1,18 @@
+@import "/styles/components.module.scss";
+
+
+.formContainer {
+
+}
+
+.ruleList {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+    padding: 0 0.75rem;
+}
+
+.datePicker {
+    margin: 0 3.5rem;
+}

@@ -1,6 +1,8 @@
 @import "/styles/components.module.scss";
 
-
+.transitionStopper {
+    width: 100%;
+}
 .ruleListPageContainer {
     background-color: $dark;
     color: $text-light;
@@ -15,6 +17,8 @@
     align-items: center;
     box-shadow: 0.14rem 0.25rem 0.25rem $secondary;
     transition: width $transition-time ease-in-out;
+
+    
     
 
     @media (max-width: $breakpoint) {
@@ -66,6 +70,7 @@
    display: flex;
    flex-direction: column;
    align-items: center;
+   margin-bottom: 2rem;
 }
 .infoSection {
     display: flex;
@@ -85,9 +90,10 @@
     display: flex;
     flex-direction: row-reverse;
     justify-content: space-between;
-    margin: 1.5rem 2rem 1rem;
+    margin: -0.5rem 2rem 1rem;
     align-items: center;
 }
+
 .ruleTextContainer {
     flex-grow: 60%;
     flex-shrink: 40%;
@@ -127,7 +133,7 @@
     // height: 200px;   
     border: $secondary 2px solid;
     border-radius:2px;
-    background-color: $gray-300;
+    background-color: $gray-500;
 }
 
 .remove{
@@ -149,7 +155,7 @@
 }
 
 .searchInput {
-    background-color: $secondary; 
+    background-color: $black; 
     outline: 0 $light;   
     border: 0;
     color: $text-light;

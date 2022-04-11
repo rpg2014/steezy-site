@@ -4,13 +4,13 @@ import { useUpdatingData } from '../../hooks/useData';
 import { useSignedInRider } from '../../hooks/useRider';
 import { RiderLevels, Rule } from '../../models';
 import styles from './RulesList.module.scss';
-import { Button, Spinner } from 'react-bootstrap';
+import { Button, Collapse, Spinner } from 'react-bootstrap';
 import { useRouter } from 'next/router';
-import { combineStyles, riderLevelToPointsMap } from '../../utils/utils';
-import { DataStore } from 'aws-amplify';
-import { useAuth } from '../../hooks/useAuth';
+
 import { RuleComponent } from './Rule';
 import FuzzySearch from 'fuzzy-search';
+import { AddPointsButton } from '../AddPoints/AddPointsButton';
+import { useAuth } from '../../hooks/useAuth';
 
 
 export type RulesListProps = {
@@ -21,6 +21,7 @@ export type RulesListProps = {
 
 export const RulesList = (props: RulesListProps) => {
     const { data: rules, isSynced } = useUpdatingData(Rule);
+    const { isCommish } = useAuth();
     const [selectedRuleIds, setSelectedRuleIds] = useState<string[]>(props.selectedRule !== undefined ? Array.isArray(props.selectedRule) ? props.selectedRule : [props.selectedRule] : [])
     const [displayedRules, setDisplayedRules] = useState(rules)
     const [searchString, setSearchString] = useState<string| undefined>(undefined);
@@ -31,8 +32,7 @@ export const RulesList = (props: RulesListProps) => {
     const [showFilters, setShowFilters] = useState(false);
 
     const { riderData } = useSignedInRider();
-    // console.log("props.selectedRule: "+ props.selectedRule);
-    // console.log("inital state: "+ props.selectedRule !== undefined ?  Array.isArray(props.selectedRule) ? props.selectedRule :[props.selectedRule]: [])
+
 
     const router = useRouter();
 
@@ -85,17 +85,20 @@ export const RulesList = (props: RulesListProps) => {
 
             })}
         </div>
-        <div className={styles.interactionContainer}>
+        {isCommish &&<div className={styles.interactionContainer}>
             <Link passHref href='/rules/create-rule'>
                 <Button variant="outline-light"> Create Rule</Button>
             </Link>
-        </div>
+        </div>}
+        {/*@ts-ignore: I'm allowed to return false */}
+        <AddPointsButton />
+        
     </div>
 
 }
 
 
-const SearchBar = ({onKeyUp, setValue, value}:{onKeyUp: ()=> void, setValue: (value: string)=> void, value?: string}) => {
+export const SearchBar = ({onKeyUp, setValue, value}:{onKeyUp: ()=> void, setValue: (value: string)=> void, value?: string}) => {
  
     return (
         <>

@@ -158,10 +158,10 @@ export const CreateRuleForm = ({ ruleId }: { ruleId?: string | null }) => {
     }
 
     return (
-        <div className={styles.createRuleContainer}>
+        <div className={styles.formContainer}>
             {loading ? <Spinner animation='border' />
                 : <>
-                    <div className={styles.title}  >
+                    <div className={styles.formTitle}  >
                         {ruleId ? 'Edit Rule' : 'Create Rule'}
                     </div>
 
@@ -180,7 +180,7 @@ export const CreateRuleForm = ({ ruleId }: { ruleId?: string | null }) => {
                         <InputGroup label='Double Black Rider Points' name='doubleBlackPoints' setFormState={setFormState} value={formState.doubleBlackPoints.toString()} />
 
 
-                        <div className={styles.interactionContainer}>
+                        <div className={styles.formInteractionContainer}>
                             {submitLoading ? <Spinner animation='border' variant="light" /> :
                                 !data ? <Button variant='light' onClick={execute}>Submit</Button> : <Link passHref href={`/rules?ruleId=${data.id}`}><Button variant='outline-success'>See Rule List</Button></Link>}
 

@@ -8,7 +8,16 @@ import { combineStyles, riderLevelToPointsMap } from "../../utils/utils";
 import Link from "next/link";
 import { Button, Modal } from "react-bootstrap";
 
-export const RuleComponent = ({ rule, selected, addToSelected, showAllPoints }: {showAllPoints: boolean,rule: Rule, selected?: boolean, addToSelected: () => void }) => {
+export type RuleComponentProps = { 
+    showAllPoints?: boolean, 
+    rule: Rule, 
+    selected?: boolean, 
+    addToSelected?: () => void
+    smallVersion?: boolean ,
+    disableButtons?: boolean,
+}
+
+export const RuleComponent = ({ rule, selected, addToSelected, showAllPoints = false, smallVersion, disableButtons }: RuleComponentProps ) => {
     const { riderData } = useSignedInRider();
     const { isCommish, cognitoId } = useAuth();
     const [transitionFinished, setTransitionFinished] = useState(selected);
@@ -21,13 +30,14 @@ export const RuleComponent = ({ rule, selected, addToSelected, showAllPoints }: 
     }
 
     return (
-        //If selected, expand and show buttons for edit and add points  or maybe have add points button always present? onTransitionEnd={() => setTransitionFinished(!transitionFinished)}
-        <div className={combineStyles(styles.ruleContainer, transitionFinished ? styles.selected : '')}  onClick={() => {addToSelected(); setTimeout(()=> setTransitionFinished(!transitionFinished),25)}} >
-            <div className={styles.infoSection}>
+        //If selected, expand and show buttons for edit and add points  or maybe have add points button always present? }  onClick={() => {addToSelected(); setTimeout(()=> setTransitionFinished(!transitionFinished),0)}} 
+        <div className={combineStyles(styles.ruleContainer, !disableButtons ? transitionFinished ? styles.selected : '' : selected ? styles.selected: '')} onTransitionEnd={() => !disableButtons && setTransitionFinished(!transitionFinished)} onClick={() => { addToSelected && addToSelected();}}>
+            
+            <div className={styles.infoSection} >
                 <div className={styles.ruleTextContainer}>
                     <h4 className={styles.ruleName}>{rule.name}</h4>
-                    <div className={styles.ruleDescription}>{rule.description}</div>
-                    <div className={styles.frequency}>{`You can earn this every ${rule.frequency.toLocaleLowerCase()}`}</div>
+                    {!smallVersion && <div className={styles.ruleDescription}>{rule.description}</div>}
+                    {!smallVersion && <div className={styles.frequency}>{`You can earn this every ${rule.frequency.toLocaleLowerCase()}`}</div>}
                 </div>
                 {riderData && !showAllPoints
                     //@ts-ignore: We verify the rider level is in the map or we show 0
@@ -36,15 +46,15 @@ export const RuleComponent = ({ rule, selected, addToSelected, showAllPoints }: 
                 }
             </div>
             {
-                <div className={combineStyles(styles.flexed, selected ? '' : styles.remove)}>
-                    {transitionFinished ? <>
-                        <Link passHref href={'/add-points?ruleId='+rule.id}><Button className={styles.button} onClick={(e)=> e.stopPropagation()} onTransitionEnd={(e)=>{e.stopPropagation()}} size='sm' variant='outline-success'>Add Points</Button></Link>
+                <div className={!disableButtons ? combineStyles(styles.flexed, selected ? '' : styles.remove) : ''} >
+                    {transitionFinished && !disableButtons ? <>
+                        {/* <Link passHref href={'/add-points?ruleId='+rule.id}><Button className={styles.button} onClick={(e)=> e.stopPropagation()} onTransitionEnd={(e)=>{e.stopPropagation()}} size='sm' variant='outline-success'>Add Points</Button></Link> */}
                         <Link passHref href={'/rules/create-rule?ruleId=' + rule.id}><Button className={styles.button} onClick={(e) => e.stopPropagation()} onTransitionEnd={(e) => e.stopPropagation()} size='sm' variant='outline-dark'>Edit Rule</Button></Link>
                         <DeleteButton  disabled={rule.lastEditedByCognitoId !== cognitoId && !isCommish} onDelete={() => DataStore.delete(Rule, rule.id)} />
                     </> : null}
                 </div>
             }
-
+            
         </div>
     )
 }
@@ -56,7 +66,7 @@ const DeleteButton = (props: {disabled: boolean, onDelete: () => void}) => {
     const toggle = () => setShow(!show);
     
     return (
-        <div onClick={(e)=> {e.stopPropagation()}}>
+        <div onClick={(e)=> {e.stopPropagation()}} onTransitionEnd={e => e.stopPropagation()}>
             <Button disabled={props.disabled} className={styles.button} onClick={toggle}   size='sm' variant='outline-danger'>Delete </Button>
             <Modal
             

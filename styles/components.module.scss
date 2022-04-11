@@ -86,3 +86,46 @@
   }
 
   
+.formContainer {
+    background-color: $dark;
+    color: $text-light;
+    opacity: 0.95;
+    border-radius: .2rem ;
+    width: 30rem;
+    height: fit-content;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0.14rem 0.25rem 0.25rem $secondary;
+    
+
+    @media (max-width: $breakpoint) {
+        width: 100%;
+    }
+    @media (min-width: $breakpoint) {
+        margin-bottom: 1rem;
+        
+    }
+}
+.formTitle {
+    color: $light;
+    padding-left: 7%;
+    padding-top: 2rem;
+    padding-bottom: 1rem;
+    font-size: 24px;
+    box-shadow: 3px, 1px, 1px black;
+
+}
+.formSectionTitle {
+    display: flex;
+    width: 100%;
+    padding-left: 2rem;
+    margin: 0.5rem 0 0.25rem;
+    font-size: larger;
+}
+.formInteractionContainer {
+    display: flex;
+    flex-direction: row-reverse;
+    justify-content: space-between;
+    margin: 1.5rem 2rem 3rem;
+    align-items: center;
+}
