@@ -6,7 +6,7 @@ type Season @model @auth(rules: [{allow: private, operations: [read]}, {allow: g
   name: String!
 }
 
-type EarnedPoint @model @auth(rules: [{allow: private, operations: [read]}, {allow: owner}]) {
+type EarnedPoint @model @auth(rules: [{allow: private, operations: [read]}, {allow: owner}, {allow: groups, groups: ["commissioners"], operations: [read, create, update, delete]}]) {
   id: ID!
   riderID: ID! @index(name: "byRider")
   ruleID: ID! @index(name: "byRule")

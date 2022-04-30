@@ -41,6 +41,7 @@
 .subtitle{
     margin-bottom: 0.5rem;
     cursor: pointer;
+    text-align: center;
 }
 .ruleContainer {
     background-color: $light;
@@ -53,16 +54,19 @@
     border-radius: 2px;
     padding: 0.5rem 0.5rem 0.25rem;
     margin-bottom: 0.1rem;
-    // transition: width $transition-time ease-in-out;
+    
+    cursor: pointer; 
 
     @media (max-width: $breakpoint) {
         width: 100%;
         border-radius: 0;
     }
 
-    &:hover{
-      cursor: pointer;  
-      outline: $secondary 2px solid
+    &:hover{ 
+      outline: $secondary 1px solid;
+      box-shadow: 4px 4px 2px rgba($black, $alpha: .7);
+      z-index: 4;
+      transform: scale(1.01);
     }
 }
 .ruleListContainer{
@@ -131,9 +135,9 @@
 
 .selected{
     // height: 200px;   
-    border: $secondary 2px solid;
+    border: $teal 2px solid;
     border-radius:2px;
-    background-color: $gray-500;
+    background-color: $teal
 }
 
 .remove{

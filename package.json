@@ -12,7 +12,7 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@aws-amplify/datastore": "^3.7.5",
+    "@aws-amplify/datastore": "^3.10.0",
     "@next/bundle-analyzer": "^12.0.10",
     "@types/amplify": "^1.1.25",
     "@types/react-bootstrap": "^0.32.29",

@@ -59,6 +59,8 @@ export const RulesList = (props: RulesListProps) => {
         </div>
         <div className={styles.subtitle} onClick={()=> setShowAllPoints(!showAllPoints)}>
             {`Showing points for ${showAllPoints ? 'all' : riderData?.riderLevel.toLocaleLowerCase()} level riders`}
+            <br />
+            Select Rules to add points
         </div>
         {rules &&
         <div className={styles.searchBarContainer}>

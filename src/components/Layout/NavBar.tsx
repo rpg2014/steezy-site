@@ -41,9 +41,9 @@ export const SteezyNavBar = () => {
                             <Link passHref  href='/scoreboard'>
                                 <Nav.Link  className={' '+styles.navButton} >Scoreboard</Nav.Link>
                             </Link>
-                            <Link passHref href="/add-points">
+                            {/* <Link passHref href="/add-points">
                             <Nav.Link className={' '+styles.navButton}>Add Points</Nav.Link>
-                            </Link>
+                            </Link> */}
                             <Link passHref href="/rules">
                                 <Nav.Link className={styles.navButton}>Rules</Nav.Link>
                             </Link>

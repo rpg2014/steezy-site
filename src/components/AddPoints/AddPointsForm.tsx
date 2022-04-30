@@ -1,12 +1,14 @@
-import { DataStore } from 'aws-amplify';
+import { DataStore, Predicates } from 'aws-amplify';
+import { randomUUID } from 'crypto';
+import Link from 'next/link';
 import router from 'next/router';
 import React, { useEffect, useState } from 'react';
-import { Button, Spinner } from 'react-bootstrap';
+import { Alert, Button, Spinner } from 'react-bootstrap';
 import { toast } from 'react-toastify';
 import { useAsyncAction } from '../../hooks/useAsyncAction';
-import { useData } from '../../hooks/useData';
+import { useCurrentSeason, useData } from '../../hooks/useData';
 import { useSignedInRider } from '../../hooks/useRider';
-import { EarnedPoint, RiderLevels, Rule } from '../../models';
+import { EarnedPoint, Rider, RiderLevels, Rule } from '../../models';
 import { riderLevelToPointsMap } from '../../utils/utils';
 import { RuleComponent } from '../Rules/Rule';
 import styles from './AddPointsForm.module.scss';
@@ -16,42 +18,49 @@ import styles from './AddPointsForm.module.scss';
 export const AddPointsForm = (props: {ruleIds?: string[]} ) => {
     const {riderData} = useSignedInRider();
     
-    const {data} = useData(Rule, props.ruleIds)
+    const {data: rules} = useData(Rule, props.ruleIds)
 
-    const[selectedRules, setSelectedRules] = useState(props.ruleIds && data ? data : []);
+    // const[selectedRules, setSelectedRules] = useState(props.ruleIds && data ? data : []);
     const [date, setDate] = useState(new Date());
+    const {season, loading: seasonLoading, error: seasonError} = useCurrentSeason();
 
-    useEffect(()=>{
-        if(data && props.ruleIds){
-            setSelectedRules(data)
-        }
-    },[data])
+    
 
 
     // make this return all of the datastore promises from each earned point addition.  
-    // const onSubmit = () => {
-    //     if(!selectedRules || selectedRules.length == 0){
-    //         throw new Error("You must select a rule to add");
-    //     }
-    //     if(!riderData) {
-    //         throw new Error("You dont seem to be logged in.")
-    //     }
-    //     selectedRules.forEach(rule => {
-    //         DataStore.save(new EarnedPoint({
-    //             date: date.toISOString(),
-    //             riderID: riderData.id,
-    //             ruleID: rule.id,
-    //             seasonID: // do we need seasons at all?
-    //         }))
-    //     })  
-    // }
+    const createPoints = () => {
+        if(!rules || rules.length == 0){
+            throw new Error("You must select a rule to add");
+        }
+        if(!riderData) {
+            throw new Error("You dont seem to be logged in.")
+        }
+        if(!season){
+            throw new Error("There isn't an active season")
+        }
 
-    // const { data, error: submitError, loading: submitLoading, execute } = useAsyncAction<Rule>(() => onSubmit().then(e => { successPopover(); return e }).catch(e => {throw e;}))
+        
+        
+        return Promise.all(rules.map(rule => {
+            const pointProps = {
+                date: date.toISOString().substring(0,10),
+                riderID: riderData.id,
+                ruleID: rule.id,
+                seasonID: season.id,
+            }
+            return DataStore.save(
+                new EarnedPoint(pointProps)
+            )
+        }))
+    }
+
+    const { data, error: submitError, loading: submitLoading, execute: executeCreatePoints } = useAsyncAction<EarnedPoint[]>(createPoints);
+
 
     if(!riderData) {
-        return <></>
+        return <Alert style={{marginTop: '1rem'}} variant='danger'>Please sign in or <Link href='/create-account'> create an account</Link></Alert>
     }
-    if(!data){
+    if(!rules){
         return <Spinner animation='border'/>
     }
     
@@ -71,43 +80,42 @@ export const AddPointsForm = (props: {ruleIds?: string[]} ) => {
                     Points to add
                 </div>
                 <div className={styles.ruleList}>
-                {data && data.map((rule) => {
+                {rules && rules.map((rule) => {
                     return (
-                        <RuleComponent disableButtons key={rule.id} smallVersion rule={rule} selected={selectedRules.some(r=> r.id === rule.id)} addToSelected={() => {
-                            const params: URLSearchParams = new URLSearchParams()
-                            let newList: Rule[];
-                            if (!selectedRules.some(r=> r.id === rule.id)) {
-                                newList = selectedRules.concat(rule);
-                            } else {
-                                newList = selectedRules.filter(r => r.id !== rule.id);
-                            }
+                        <RuleComponent disableButtons key={rule.id} smallVersion rule={rule}  addToSelected={() => {
+                            // const params: URLSearchParams = new URLSearchParams()
+                            // let newList: Rule[];
+                            // if (!selectedRules.some(r=> r.id === rule.id)) {
+                            //     newList = selectedRules.concat(rule);
+                            // } else {
+                            //     newList = selectedRules.filter(r => r.id !== rule.id);
+                            // }
 
-                            // router.push({ query: params.toString() })
-                            setSelectedRules(newList)
+                            // // router.push({ query: params.toString() })
+                            // setSelectedRules(newList)
                         }} /> 
                     )
                 })}
             </div>
             
-            {selectedRules.length> 0 && <div className={styles.totalPointsContainer} >
+            {rules.length> 0 && <div className={styles.totalPointsContainer} >
+                <h4>
+                    Total Points:
+                </h4>
+                <h4>
                 {/*@ts-ignore: We verify the rider level is in the map or we show 0}*/}
-                total points = {selectedRules.map(r=> Number.parseInt(riderLevelToPointsMap.has(riderData.riderLevel as RiderLevels) ? r.levelPointsMap[riderLevelToPointsMap.get(riderData.riderLevel)]: '0')).reduce((pv, cv) => pv + cv)}
+                {rules.map(r=> Number.parseInt(riderLevelToPointsMap.has(riderData.riderLevel as RiderLevels) ? r.levelPointsMap[riderLevelToPointsMap.get(riderData.riderLevel)]: '0')).reduce((pv, cv) => pv + cv)}
+                </h4>
             </div>}
+
             <div className={styles.formInteractionContainer}>
-                <Button variant='success' onClick={()=>{
-                    toast.error('Not implemented yet', {
-                        position: "bottom-center",
-                        autoClose: 3000,
-                        hideProgressBar: true,
-                        closeOnClick: false,
-                        pauseOnHover: false,
-                        draggable: true,
-                        progress: undefined,
-                        theme: 'dark',
-                    })
-                }}>
-                Submit
-                </Button>
+                {submitError && <Alert variant='danger'>{submitError.message}</Alert>}
+                {submitLoading && <Spinner size='sm' animation={'border'}/>}
+                {data && <Alert variant='success'>Points Added!</Alert>}
+                {!submitError && !submitLoading && !data && <Button  variant='success' onClick={executeCreatePoints}>
+                        Submit
+                    </Button>
+                }
             </div>
         </div>
         </>

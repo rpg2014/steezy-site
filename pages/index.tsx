@@ -10,11 +10,12 @@ import { SignInOutButton } from '../src/components/LoginComponents/LoginPopover'
 import { SteezyNavBar } from '../src/components/Layout/NavBar'
 import { useAuth } from '../src/hooks/useAuth'
 import { useSyncStatus } from '../src/hooks/useSyncStatus'
-import { Rider, Rule, Season } from '../src/models'
+import { EarnedPoint, Rider, Rule, Season } from '../src/models'
 import styles from '../styles/Home.module.scss'
 // import { CalcuationEngine } from '../steezy-wasm/pkg/steezy_wasm'
-import { useData } from '../src/hooks/useData'
+import { useCurrentSeason, useData } from '../src/hooks/useData'
 import { useSignedInRider } from '../src/hooks/useRider'
+import { riderLevelToPointsMap } from '../src/utils/utils'
 
 
 // let engine: CalcuationEngine;
@@ -23,7 +24,7 @@ const Home: NextPage = () => {
 
     const {riderData} = useSignedInRider();
     const {data: rules} = useData(Rule);
-    
+    const {season} = useCurrentSeason();
     const {data: seasons} = useData(Season);
 
     const {syncReady} = useSyncStatus();
@@ -32,6 +33,33 @@ const Home: NextPage = () => {
     const { cognitoId, name, email, signedIn } = auth;
 
 
+    // Will prob wanna move this to context?
+    const [totalPoints, setTotalPoints] = useState(0);
+    useEffect(()=> {
+        //Sums up all of the earned points for a rider.  
+        const getSumOfPoints = async () => {
+            if(signedIn && riderData && season){
+                // first gets  all of the earned points for current rider
+                let ridersEarnedPoints = await DataStore.query(EarnedPoint, c=> c.riderID('eq', riderData.id).seasonID('eq',season.id))
+                
+                // then map that list of earned POints to rules, so we can get the points per rule
+                let ruleListForEarnedPointsPromise = ridersEarnedPoints.map(point=> DataStore.query(Rule, r => r.id('eq', point.ruleID)).then(rules=> {
+                    if(rules.length !== 1){
+                        console.log('something is broken');
+                        
+                    }
+                    return rules[0];
+                }))
+                // await the promise due to the return type of Datastore, could combine with above line.
+                let rules = await Promise.all(ruleListForEarnedPointsPromise)
+                // sum them up
+                let sum = 0; //@ts-ignore: the rider level is gonna be in the level points map
+                rules.forEach(rule => sum = sum + Number.parseInt(rule.levelPointsMap[riderLevelToPointsMap.get(riderData.riderLevel)]))
+                setTotalPoints(sum)
+            }
+        }
+        getSumOfPoints()
+    },[signedIn, riderData, season])
     
 
 
@@ -48,13 +76,13 @@ const Home: NextPage = () => {
                 
                 <div className={styles.description}>
                     <p>
-                        UserId is {cognitoId}
+                        CognitoId is {cognitoId}
                         <br />
                         Name is {riderData?.name}
                         <br />
                         email is {email}
                         <br />
-                        Number of points earned: {riderData?.earnedPoints?.length}
+                        Number of points earned: {totalPoints}
                     </p>
                     
                 </div>

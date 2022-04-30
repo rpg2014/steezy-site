@@ -1,6 +1,6 @@
 import {useState} from 'react'
 
-export const useAsyncAction = <T>(fn: ()=> Promise<any>)=> {
+export const useAsyncAction = <T>(fn: ()=> Promise<T>)=> {
     const [error, setError] = useState<Error>();
     const [isLoading, setIsLoading] = useState(false);
     const [data, setData] = useState<T>()
