@@ -37,7 +37,6 @@ export const useUpdatingData=<T extends PersistentModel>(type: PersistentModelCo
 
 
 export const useCurrentSeason = (): {season: Season | undefined, loading: boolean, error: Error | undefined} => {
-    const [season, setSeason] = useState<Season| undefined>();
     const {signedIn} = useAuth();
     const {execute, error, data, loading} = useAsyncAction<Season | undefined>(() => {
         return DataStore.query(Season).then(seasons => {

@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import React, { useEffect, useState } from 'react';
-import { useUpdatingData } from '../../hooks/useData';
+import { useData } from '../../hooks/useData';
 import { useSignedInRider } from '../../hooks/useRider';
 import { RiderLevels, Rule } from '../../models';
 import styles from './RulesList.module.scss';
@@ -20,7 +20,7 @@ export type RulesListProps = {
 
 
 export const RulesList = (props: RulesListProps) => {
-    const { data: rules, isSynced } = useUpdatingData(Rule);
+    const { data: rules } = useData(Rule);
     const { isCommish } = useAuth();
     const [selectedRuleIds, setSelectedRuleIds] = useState<string[]>(props.selectedRule !== undefined ? Array.isArray(props.selectedRule) ? props.selectedRule : [props.selectedRule] : [])
     const [displayedRules, setDisplayedRules] = useState(rules)
@@ -47,8 +47,9 @@ export const RulesList = (props: RulesListProps) => {
     useEffect(()=>{
         if(rules){
             setSearchObject(new FuzzySearch(rules, ['name','description'],{caseSensitive: false, sort: true}))
+            setDisplayedRules(rules)
         }
-        setDisplayedRules(rules)
+        
     },[rules])
 
     const searchFunction = () => setDisplayedRules( searchObject?.search(searchString))
@@ -71,19 +72,25 @@ export const RulesList = (props: RulesListProps) => {
         <div className={styles.ruleListContainer}>
             {!rules && <Spinner animation='border' variant="light" />}
             {displayedRules?.map(rule => {
-                return <RuleComponent showAllPoints={showAllPoints} key={rule.id} rule={rule} selected={selectedRuleIds.includes(rule.id)} addToSelected={() => {
-                    const params: URLSearchParams = new URLSearchParams()
-                    let newList: string[];
-                    if (!selectedRuleIds.includes(rule.id)) {
-                        newList = selectedRuleIds.concat(rule.id);
-                    } else {
-                        newList = selectedRuleIds.filter(r => r !== rule.id);
-                    }
-                    newList.forEach((ruleId) => params.append("ruleId", ruleId));
+                return <RuleComponent disableButtons={!isCommish} 
+                        showAllPoints={showAllPoints} 
+                        key={rule.id} 
+                        rule={rule} 
+                        selected={selectedRuleIds.includes(rule.id)} 
+                        addToSelected={() => {
+                            const params: URLSearchParams = new URLSearchParams()
+                            let newList: string[];
+                            if (!selectedRuleIds.includes(rule.id)) {
+                                newList = selectedRuleIds.concat(rule.id);
+                            } else {
+                                newList = selectedRuleIds.filter(r => r !== rule.id);
+                            }
+                            newList.forEach((ruleId) => params.append("ruleId", ruleId));
 
-                    router.push({ query: params.toString() })
-                    setSelectedRuleIds(newList)
-                }} />
+                            router.push({ query: params.toString() })
+                            setSelectedRuleIds(newList)
+                        }} 
+                />
 
             })}
         </div>
