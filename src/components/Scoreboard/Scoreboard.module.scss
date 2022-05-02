@@ -1,6 +1,9 @@
 @import '/styles/components.module.scss';
 
 
+.scoreboardContainer {
+    margin-top: 1.0rem;
+}
 .rider {
     display: flex;
     flex-direction: row;

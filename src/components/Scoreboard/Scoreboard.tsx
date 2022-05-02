@@ -18,7 +18,7 @@ export const ScoreboardList = () => {
     }
     return (<> 
         <div className={combineStyles(styles.formContainer, styles.container)}>
-        <h1>Scoreboard</h1>
+        <h1 className={styles.scoreboardContainer}>Scoreboard</h1>
         <p>{season?.name}</p>
         <hr />
         <div className={styles.container}>

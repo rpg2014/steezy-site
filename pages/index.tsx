@@ -108,6 +108,12 @@ const Home: NextPage = () => {
                         <p>See the full list of rules</p>
                         </div>
                     </Link>
+                    <Link href='/scoreboard' passHref>
+                        <div className={styles.card}>
+                            <h2>Scoreboard &rarr;</h2>
+                            <p>See the Seasons scores</p>
+                        </div>
+                    </Link>
 
                     
                 </div>
