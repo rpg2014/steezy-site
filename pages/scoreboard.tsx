@@ -1,4 +1,5 @@
 import { NextPage } from "next";
+import { ScoreboardList } from "../src/components/Scoreboard/Scoreboard";
 
 
 
@@ -6,7 +7,8 @@ import { NextPage } from "next";
 
 
 const Scoreboard: NextPage = () => {
-    return <h1>Scoreboard</h1>
+    
+    return <ScoreboardList />
 }
 
 
