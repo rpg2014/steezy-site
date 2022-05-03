@@ -41,16 +41,21 @@ export const RulesList = (props: RulesListProps) => {
         setSelectedRuleIds(props.selectedRule !== undefined ? Array.isArray(props.selectedRule) ? props.selectedRule : [props.selectedRule] : [])
     }, [props.selectedRule])
 
+    // useEffect(()=> {
+    //     console.log(displayedRules);
+        
+    // },[displayedRules])
+
     // update the displayedrules list when rules updates.  
     // will be used for when there are filters more
     // is rn unneccessary
     useEffect(()=>{
-        if(rules){
+        if(rules && !displayedRules){
             setSearchObject(new FuzzySearch(rules, ['name','description'],{caseSensitive: false, sort: true}))
             setDisplayedRules(rules)
         }
         
-    },[rules])
+    },[rules, displayedRules])
 
     const searchFunction = () => setDisplayedRules( searchObject?.search(searchString))
 

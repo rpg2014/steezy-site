@@ -4,6 +4,13 @@
 .scoreboardContainer {
     margin-top: 1.0rem;
 }
+
+.periodSelector{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+    width: 75%;
+}
 .rider {
     display: flex;
     flex-direction: row;
