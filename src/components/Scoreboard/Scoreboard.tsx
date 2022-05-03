@@ -61,7 +61,7 @@ const RiderComp = (props: {rider: Rider}) => {
     return (<div className={styles.rider}>
         {props.rider.name}
         <div className={styles.totalPoints}>
-            Total Points: {totalPoints}
+            Total Points: {totalPoints.toLocaleString()}
         </div>
     </div>)
 }
