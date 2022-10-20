@@ -1,5 +1,5 @@
 import { DataStore } from "aws-amplify";
-import { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import rules from "../../pages/rules";
 import { CalcuationEngine } from "../../steezy-wasm/pkg/steezy_wasm";
 import { TimePeriod } from "../components/Scoreboard/Scoreboard";
@@ -69,6 +69,7 @@ export const useRiderScores = () => {
                 // if(scoreState?.has(timePeriod))
             }
         } 
+    
         getAllRidersPoints();
     },[riders, timePeriod, season, setScoreState])
 

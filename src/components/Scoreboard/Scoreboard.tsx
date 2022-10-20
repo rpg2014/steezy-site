@@ -1,7 +1,7 @@
 
 import { DataStore } from 'aws-amplify';
 import { useEffect, useState } from 'react';
-import { Alert } from 'react-bootstrap';
+import { Alert, Spinner } from 'react-bootstrap';
 import { useAuth } from '../../hooks/useAuth';
 import { useCurrentSeason, useData } from '../../hooks/useData';
 import { EarnedPoint, Rider, RiderLevels, Rule } from '../../models'
@@ -26,7 +26,10 @@ export const ScoreboardList = () => {
         <Alert variant='secondary' >Logging In?</Alert>
     }
     if(!scoreDataForTimePeriod){
-        return <>Loading Scores...</>
+        return <>
+        <h2>Loading Scores... </h2>
+        <Spinner  style={{marginTop: '2rem'}} animation={'border'} />
+        </>
     }
     return (<> 
         <div className={combineStyles(styles.formContainer, styles.container)}>
@@ -52,7 +55,7 @@ export const ScoreboardList = () => {
 }
 
 
-const RiderComp = (props: {rider: Rider, score: number}) => {
+const RiderComp = (props: {rider: Rider, score?: number}) => {
     // Will prob wanna move this to context?
     // const [totalPoints, setTotalPoints] = useState(0);
     // const {season} = useCurrentSeason();
@@ -89,7 +92,7 @@ const RiderComp = (props: {rider: Rider, score: number}) => {
     return (<div className={styles.rider}>
         {props.rider.name}
         <div className={styles.totalPoints}>
-            Points: {props.score.toLocaleString()}
+            Points: {props.score ? props.score.toLocaleString() : 0 }
         </div>
     </div>)
 }

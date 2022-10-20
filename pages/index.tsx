@@ -72,6 +72,9 @@ const Home: NextPage = () => {
                 <h1 className={styles.title}>
                     Welcome to Steezy
                 </h1>
+                <h2>
+                  {season && `Welcome to the ${season?.name}!`}
+                </h2>
                 <div className={styles.description}>
                         <div>
                             {!signedIn &&
@@ -79,13 +82,11 @@ const Home: NextPage = () => {
                                 Please log in or <Link href='/create-account'> create an account</Link>
                             </Alert>}
                             {signedIn && <>
-                            CognitoId is {cognitoId}
+                            
+                            Logged in as {riderData?.name}
                             <br />
-                            Name is {riderData?.name}
-                            <br />
-                            email is {email}
-                            <br />
-                            Number of points earned: {totalPoints}
+                            {season? `Number of points earned this season: ${totalPoints}`
+                            : `The season hasn't started yet, but you can still create an account`}
                             </>
                             }
                         </div>

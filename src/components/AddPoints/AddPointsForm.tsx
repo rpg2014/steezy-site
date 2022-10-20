@@ -24,7 +24,7 @@ export const AddPointsForm = (props: {ruleIds?: string[]} ) => {
 
     // const[selectedRules, setSelectedRules] = useState(props.ruleIds && data ? data : []);
     const [date, setDate] = useState(new Date());
-    const {season, loading: seasonLoading, error: seasonError} = useCurrentSeason();
+    const {season, loading: seasonLoading} = useCurrentSeason();
 
     
 

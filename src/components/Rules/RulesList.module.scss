@@ -154,8 +154,23 @@
 
 .searchBarContainer {
     margin: 0.5rem 1rem 0.5rem;
-    
-    
+    display: flex;
+    justify-content: space-between;
+    width: 75%;
+    @media (max-width: $breakpoint) {
+        width: 100%;
+        border-radius: 0;
+        padding: 0 0.75rem;
+    }
+}
+
+.filterContainer {
+    width: 75%;
+    @media (max-width: $breakpoint) {
+        width: 100%;
+        border-radius: 0;
+        padding: 0 0.75rem;
+    }
 }
 
 .searchInput {
