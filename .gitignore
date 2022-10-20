@@ -36,6 +36,18 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 
+
+# amplify/
+# !amplify/backend/api/Steezy/schema.graphql
+
+.vscode/settings.json
+public/sw.js
+public/workbox*
+public/fallback*
+public/worker*
+
+/design_images
+
 #amplify-do-not-edit-begin
 amplify/\#current-cloud-backend
 amplify/.config/local-*
@@ -56,14 +68,3 @@ amplifytools.xcconfig
 .secret-*
 **.sample
 #amplify-do-not-edit-end
-
-# amplify/
-# !amplify/backend/api/Steezy/schema.graphql
-
-.vscode/settings.json
-public/sw.js
-public/workbox*
-public/fallback*
-public/worker*
-
-/design_images

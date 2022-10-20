@@ -32,6 +32,8 @@ You can check out [the Next.js GitHub repository](https://github.com/vercel/next
 Set up aws-amplify/cli, and run amplify pull
 
 ## Collaberation
+### Git setup
+local -> dev -> staging -> main
 ### AWS
 * Do you want your own user account (easier), or do you want a role you can assume from your personal account?
 

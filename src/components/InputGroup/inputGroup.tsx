@@ -29,7 +29,7 @@ export const InputGroup = (props: InputGroupProps ) => {
                 {props.select ? 
                 <select value={props.value} name={props.name} className={styles.inputField} onChange={onInput}>
                     {Object.values(props.select.options).map(option =>
-                        <option key={option} value={option}>{option}</option>
+                        <option key={option ? option.toString() : "undefined"} value={option}>{option}</option>
                     )}
                 </select>
                 : <input 

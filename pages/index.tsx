@@ -5,152 +5,83 @@ import type { NextPage } from 'next'
 import Head from 'next/head'
 import Link from 'next/link'
 import React, { useEffect, useState } from 'react'
-import { Button } from 'react-bootstrap'
+import { Alert, Button } from 'react-bootstrap'
 import { SignInOutButton } from '../src/components/LoginComponents/LoginPopover'
 import { SteezyNavBar } from '../src/components/Layout/NavBar'
 import { useAuth } from '../src/hooks/useAuth'
 import { useSyncStatus } from '../src/hooks/useSyncStatus'
-import { Rider, Rule, Season } from '../src/models'
+import { EarnedPoint, Rider, Rule, Season } from '../src/models'
 import styles from '../styles/Home.module.scss'
-import { CalcuationEngine } from '../steezy-wasm/pkg/steezy_wasm'
-import { useData } from '../src/hooks/useData'
+// import { CalcuationEngine } from '../steezy-wasm/pkg/steezy_wasm'
+import { useCurrentSeason, useData } from '../src/hooks/useData'
 import { useSignedInRider } from '../src/hooks/useRider'
+import { riderLevelToPointsMap } from '../src/utils/utils'
+import { useRiderScores } from '../src/hooks/useRuleScores'
 
 
-let engine: CalcuationEngine;
+// let engine: CalcuationEngine;
 
 const Home: NextPage = () => {
 
-    const {riderData} = useSignedInRider();
-    const {data: rules} = useData(Rule);
-    
-    const {data: seasons} = useData(Season);
-
-    const {syncReady} = useSyncStatus();
+    const { riderData } = useSignedInRider();
+    const { season } = useCurrentSeason();
+    const { scoresByRiderId, loadingPercent } = useRiderScores();
 
     const auth = useAuth();
     const { cognitoId, name, email, signedIn } = auth;
 
-    
-
-
 
     return (
-        
-            <>
-            
+        <>
             <main className={styles.main}>
-                
                 <h1 className={styles.title}>
                     Welcome to Steezy
                 </h1>
-                
+                <h2>
+                    {season && `The ${season?.name} has started!`}
+                </h2>
                 <div className={styles.description}>
-                    <p>
-                        UserId is {cognitoId}
-                        <br />
-                        Name is {name}
-                        <br />
-                        email is {email}
-                        <br />
-                        Number of points earned: {riderData?.earnedPoints?.length}
-                    </p>
-                    
+                    <div>
+                        {!signedIn &&
+                            <Alert variant='warning'>
+                                Please log in or <Link href='/create-account'> create an account</Link>
+                            </Alert>}
+                        {signedIn && riderData ?
+                            <>
+                                Logged in as {riderData.name}
+                                <br />
+                                {season ? `Number of points earned this season: ${scoresByRiderId?.get(riderData.id)}`
+                                    : `The season hasn't started yet, but you can still create an account and check out the rules`}
+                            </> : `Unable to find user data`
+                        }
+                    </div>
+
                 </div>
-                
-                <hr className={styles.divider}/>
+                <hr className={styles.divider} />
                 <div className={styles.grid}>
                     {signedIn &&
                         <Link passHref href='/admin'>
-                        <div  className={styles.cardDanger}>
-                            
-                            <h2>Admin Page &rarr;</h2>
-                            <p>Find in-depth information about Next.js features and API.</p>
-                        </div>
+                            <div className={styles.cardDanger}>
+
+                                <h2>Admin Page &rarr;</h2>
+                                <p>Do admin actions like create a new rule</p>
+                            </div>
                         </Link>
                     }
                     <Link href="/rules" passHref>
-                     <div className={styles.card}>
-                        <h2>Rule List &rarr;</h2>
-                        <p>See the full list of rules</p>
+                        <div className={styles.card}>
+                            <h2>Rule List &rarr;</h2>
+                            <p>See the full list of rules</p>
+                        </div>
+                    </Link>
+                    <Link href='/scoreboard' passHref>
+                        <div className={styles.card}>
+                            <h2>Scoreboard &rarr;</h2>
+                            <p>See the Seasons scores</p>
                         </div>
                     </Link>
 
-                    <a
-                        href="https://github.com/vercel/next.js/tree/canary/examples"
-                        className={styles.card}
-                    >
-                        <h2>Examples &rarr;</h2>
-                        <p>Discover and deploy boilerplate example Next.js projects.</p>
-                    </a>
 
-                    <a
-                        href="https://vercel.com/new?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-                        className={styles.card}
-                    >
-                        <h2>Deploy &rarr;</h2>
-                        <p>
-                            Instantly deploy your Next.js site to a public URL with Vercel.
-                        </p>
-                    </a>
-                    <Link passHref href='/admin'>
-                    <div  className={styles.card}>
-                        <h2>Admin Page &rarr;</h2>
-                        <p>Find in-depth information about Next.js features and API.</p>
-                    </div>
-                    </Link>
-
-                    <a href="https://nextjs.org/learn" className={styles.card}>
-                        <h2>Learn &rarr;</h2>
-                        <p>Learn about Next.js in an interactive course with quizzes!</p>
-                    </a>
-
-                    <a
-                        href="https://github.com/vercel/next.js/tree/canary/examples"
-                        className={styles.card}
-                    >
-                        <h2>Examples &rarr;</h2>
-                        <p>Discover and deploy boilerplate example Next.js projects.</p>
-                    </a>
-
-                    <a
-                        href="https://vercel.com/new?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-                        className={styles.card}
-                    >
-                        <h2>Deploy &rarr;</h2>
-                        <p>
-                            Instantly deploy your Next.js site to a public URL with Vercel.
-                        </p>
-                    </a>
-                    <Link passHref href='/admin'>
-                    <div  className={styles.card}>
-                        <h2>Admin Page &rarr;</h2>
-                        <p>Find in-depth information about Next.js features and API.</p>
-                    </div>
-                    </Link>
-
-                    <a href="https://nextjs.org/learn" className={styles.card}>
-                        <h2>Learn &rarr;</h2>
-                        <p>Learn about Next.js in an interactive course with quizzes!</p>
-                    </a>
-
-                    <a
-                        href="https://github.com/vercel/next.js/tree/canary/examples"
-                        className={styles.card}
-                    >
-                        <h2>Examples &rarr;</h2>
-                        <p>Discover and deploy boilerplate example Next.js projects.</p>
-                    </a>
-
-                    <a
-                        href="https://vercel.com/new?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-                        className={styles.card}
-                    >
-                        <h2>Deploy &rarr;</h2>
-                        <p>
-                            Instantly deploy your Next.js site to a public URL with Vercel.
-                        </p>
-                    </a>
                 </div>
             </main>
 

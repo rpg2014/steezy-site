@@ -13,5 +13,19 @@ self.addEventListener('message', event => {
     console.log(event?.data);
   });
   
+
+// self.addEventListener('message', async (event?: ExtendableMessageEvent) => {
+//     // console.log(event)
+//     if (event && event.data && event.data.action === 'CACHE_NEW_ROUTE') {
+//     caches.open('v1').then(cache =>
+        
+//         cache.match(event.source.url).then(res => {
+//         if (res === undefined) {
+//             return cache.add(event.source.url)
+//         }
+//         })
+//     )
+//     }
+// })
   
 declare let self: ServiceWorkerGlobalScope

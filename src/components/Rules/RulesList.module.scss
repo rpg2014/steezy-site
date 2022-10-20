@@ -1,6 +1,8 @@
 @import "/styles/components.module.scss";
 
-
+.transitionStopper {
+    width: 100%;
+}
 .ruleListPageContainer {
     background-color: $dark;
     color: $text-light;
@@ -14,6 +16,9 @@
     justify-content: flex-start;
     align-items: center;
     box-shadow: 0.14rem 0.25rem 0.25rem $secondary;
+    transition: width $transition-time ease-in-out;
+
+    
     
 
     @media (max-width: $breakpoint) {
@@ -35,6 +40,8 @@
 }
 .subtitle{
     margin-bottom: 0.5rem;
+    cursor: pointer;
+    text-align: center;
 }
 .ruleContainer {
     background-color: $light;
@@ -42,19 +49,24 @@
     width: 75%;
     align-items: center;
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
     justify-content: space-between;
     border-radius: 2px;
-    padding: 0.5rem;
+    padding: 0.5rem 0.5rem 0.25rem;
+    margin-bottom: 0.1rem;
+    
+    cursor: pointer; 
 
     @media (max-width: $breakpoint) {
         width: 100%;
         border-radius: 0;
     }
 
-    &:hover{
-      cursor: pointer;  
-      outline: $primary 2px solid
+    &:hover{ 
+      outline: $secondary 1px solid;
+      box-shadow: 4px 4px 2px rgba($black, $alpha: .7);
+      z-index: 4;
+      transform: scale(1.01);
     }
 }
 .ruleListContainer{
@@ -62,6 +74,13 @@
    display: flex;
    flex-direction: column;
    align-items: center;
+   margin-bottom: 2rem;
+}
+.infoSection {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    width: 100%;
 }
 .ruleName {
     color: $black;
@@ -75,6 +94,104 @@
     display: flex;
     flex-direction: row-reverse;
     justify-content: space-between;
-    margin: 1.5rem 2rem 1rem;
+    margin: -0.5rem 2rem 1rem;
     align-items: center;
+}
+
+.ruleTextContainer {
+    flex-grow: 60%;
+    flex-shrink: 40%;
+    
+}
+
+.pointsList{
+    display: flex;
+    flex-direction: column;
+    font-size: medium;
+    transition: all 300ms ease-in-out;
+    font-size: smaller;
+    flex-grow: 40%;
+    
+}
+.points{
+    text-align: center;
+    justify-content: center;
+    align-items: center;
+    margin: auto 0;
+}
+.pointsListItem {
+    margin: 0.05rem 0
+}
+.flexed {
+    flex-grow: 0.25;
+    transition: all 25ms ease-in;
+    justify-content: center;
+    align-items: center;
+    flex-direction: row;
+    display: flex;
+    margin: 0.5rem 0 ;
+    
+}
+
+.selected{
+    // height: 200px;   
+    border: $teal 2px solid;
+    border-radius:2px;
+    background-color: $teal
+}
+
+.remove{
+    flex-grow: 0.000001;
+    margin: 0 0 0 0;
+    // height: 0;
+}
+.button {
+    margin: 0.5rem 0.1rem
+}
+
+
+//Search bar
+
+.searchBarContainer {
+    margin: 0.5rem 1rem 0.5rem;
+    display: flex;
+    justify-content: space-between;
+    width: 75%;
+    @media (max-width: $breakpoint) {
+        width: 100%;
+        border-radius: 0;
+        padding: 0 0.75rem;
+    }
+}
+
+.filterContainer {
+    width: 75%;
+    padding-bottom: 1rem;
+    
+    @media (max-width: $breakpoint) {
+        width: 100%;
+        border-radius: 0;
+        padding: 0 0.75rem 1rem;
+    }
+}
+
+.searchInput {
+    background-color: $black; 
+    outline: 0 $light;   
+    border: 0;
+    color: $text-light;
+    border-radius: 3px;
+    // margin-right: 2rem;
+    // &:active
+    // &:focus
+    transition: box-shadow $transition-time ease-in-out;
+    &:hover {
+        outline: $light 1px solid;
+        box-shadow: 2px 2px 2px rgba($black, $alpha: .7);
+        // outline
+    }
+    &:focus {
+        outline: $light 1px solid;
+        box-shadow: 2px 2px 2px rgba($black, $alpha: .7);
+    }
 }

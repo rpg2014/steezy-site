@@ -1,5 +1,5 @@
 
-import Auth from "@aws-amplify/auth";
+import { Auth } from "@aws-amplify/auth";
 import { DataStore, Predicates } from "aws-amplify";
 import Link from "next/link";
 

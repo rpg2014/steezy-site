@@ -6,7 +6,7 @@ type Season @model @auth(rules: [{allow: private, operations: [read]}, {allow: g
   name: String!
 }
 
-type EarnedPoint @model @auth(rules: [{allow: private, operations: [read]}, {allow: owner}]) {
+type EarnedPoint @model @auth(rules: [{allow: private, operations: [read]}, {allow: owner}, {allow: groups, groups: ["commissioners"], operations: [read, create, update, delete]}]) {
   id: ID!
   riderID: ID! @index(name: "byRider")
   ruleID: ID! @index(name: "byRule")
@@ -37,13 +37,13 @@ type Rider @model @auth(rules: [{allow: groups, groups: ["commissioners"], opera
   cognitoId: String!
 }
 
-type Rule @model @auth(rules: [{allow: private, operations: [read]}, {allow: groups, groups: ["commissioners"], operations: [read, create, update, delete]}, {allow: owner}]) {
+type Rule @model @auth(rules: [{allow: private, operations: [read, update]}, {allow: groups, groups: ["commissioners"], operations: [read, create, update, delete]}, {allow: owner}]) {
   id: ID!
   name: String!
   description: String!
   frequency: Frequency!
   earnedPoints: [EarnedPoint] @hasMany(indexName: "byRule", fields: ["id"])
   levelPointsMap: AWSJSON!
-  lastEditedBy: Rider @hasOne
+  lastEditedByCognitoId: ID
 }
  
