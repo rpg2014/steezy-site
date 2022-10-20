@@ -84,6 +84,7 @@ export const RulesList = (props: RulesListProps) => {
             </div>
         }
         {showFilters && <div className={styles.filterContainer}>
+            {/* @ts-ignore */}
                 <InputGroup label='Rule Frequency' select={{ options: [undefined].concat(Object.keys(Frequency)) }} name='frequency' type='text' 
                 setFormState={setFilters} value={filters?.frequency}  />
                 <Button variant='outline-info' size='sm' onClick={()=> {setFilters(undefined); setShowFilters(false)}} className={styles.filterButton}>Clear Filters</Button>
