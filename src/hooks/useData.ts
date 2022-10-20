@@ -2,19 +2,28 @@ import { PersistentModel, PersistentModelConstructor, ProducerModelPredicate } f
 import { PredicateAll } from "@aws-amplify/datastore/lib-esm/predicates";
 import { DataStore } from "aws-amplify";
 import { useEffect, useState } from "react";
+import { isDataView } from "util/types";
 import { Season } from "../models";
 import { useAsyncAction } from "./useAsyncAction";
 import { useAuth } from "./useAuth";
 
-export const useData =<T extends PersistentModel>(type: PersistentModelConstructor<T>, ids: string[] =  []) => {
+
+
+export const useData =<T extends PersistentModel>(type: PersistentModelConstructor<T>, ids?: string[]) => {
+
     const [data, setData] = useState<T[]>();
-    const {signedIn } = useAuth()
-
-    useEffect(()=> {
-        //@ts-ignore: Works for me, says id as a string is not assignable to some internal type
-        DataStore.query(type, c => c.or((c) => ids.reduce((c, id) => c.id('eq', id), c))).then(data => setData(data));
-    },[signedIn, ids])
-
+    useEffect(()=>{
+        const queryData = async () => {
+            let criteria;
+            if(ids){
+                // @ts-ignore
+                criteria = c=>c.or((c) => ids.reduce((c, id) => c.id('eq', id), c))
+            }
+            const queriedData = await DataStore.query(type, criteria)
+            setData(queriedData)
+        }
+        queryData()
+    },[type, ids])
     return {data}
 }
 
@@ -56,7 +65,7 @@ export const useCurrentSeason = (): {season: Season | undefined, loading: boolea
 const findSeason = (season: Season) => {
     let startDate = new Date(season.startDate);
     let endDate = new Date(season.endDate)
-    const currentDate = new Date();
+    const currentDate = new Date('2022-11-15');
     
     return currentDate >= startDate && currentDate <= endDate;
 }

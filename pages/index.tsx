@@ -16,97 +16,62 @@ import styles from '../styles/Home.module.scss'
 import { useCurrentSeason, useData } from '../src/hooks/useData'
 import { useSignedInRider } from '../src/hooks/useRider'
 import { riderLevelToPointsMap } from '../src/utils/utils'
+import { useRiderScores } from '../src/hooks/useRuleScores'
 
 
 // let engine: CalcuationEngine;
 
 const Home: NextPage = () => {
 
-    const {riderData} = useSignedInRider();
-    const {season} = useCurrentSeason();
-    const {data: seasons} = useData(Season);
-
-    const {syncReady} = useSyncStatus();
+    const { riderData } = useSignedInRider();
+    const { season } = useCurrentSeason();
+    const { scoresByRiderId, loadingPercent } = useRiderScores();
 
     const auth = useAuth();
     const { cognitoId, name, email, signedIn } = auth;
 
 
-    // Will prob wanna move this to context?
-    const [totalPoints, setTotalPoints] = useState(0);
-    useEffect(()=> {
-        //Sums up all of the earned points for a rider.  
-        const getSumOfPoints = async () => {
-            if(signedIn && riderData && season){
-                // first gets  all of the earned points for current rider
-                let ridersEarnedPoints = await DataStore.query(EarnedPoint, c=> c.riderID('eq', riderData.id).seasonID('eq',season.id))
-                
-                // then map that list of earned POints to rules, so we can get the points per rule
-                let ruleListForEarnedPointsPromise = ridersEarnedPoints.map(point=> DataStore.query(Rule, r => r.id('eq', point.ruleID)).then(rules=> {
-                    if(rules.length !== 1){
-                        console.log('something is broken');
-                        
-                    }
-                    return rules[0];
-                }))
-                // await the promise due to the return type of Datastore, could combine with above line.
-                let rules = await Promise.all(ruleListForEarnedPointsPromise)
-                // sum them up
-                let sum = 0; //@ts-ignore: the rider level is gonna be in the level points map
-                rules.forEach(rule => sum = sum + Number.parseInt(rule.levelPointsMap[riderLevelToPointsMap.get(riderData.riderLevel)]))
-                setTotalPoints(sum)
-            }
-        }
-        getSumOfPoints()
-    },[signedIn, riderData, season])
-    
-
-
-
     return (
-        
-            <>
-            
+        <>
             <main className={styles.main}>
-                
                 <h1 className={styles.title}>
                     Welcome to Steezy
                 </h1>
                 <h2>
-                  {season && `Welcome to the ${season?.name}!`}
+                    {season && `The ${season?.name} has started!`}
                 </h2>
                 <div className={styles.description}>
-                        <div>
-                            {!signedIn &&
+                    <div>
+                        {!signedIn &&
                             <Alert variant='warning'>
                                 Please log in or <Link href='/create-account'> create an account</Link>
                             </Alert>}
-                            {signedIn && <>
-                            
-                            Logged in as {riderData?.name}
-                            <br />
-                            {season? `Number of points earned this season: ${totalPoints}`
-                            : `The season hasn't started yet, but you can still create an account and check out the rules`}
-                            </>
-                            }
-                        </div>
-                        
+                        {signedIn && riderData ?
+                            <>
+                                Logged in as {riderData.name}
+                                <br />
+                                {season ? `Number of points earned this season: ${scoresByRiderId?.get(riderData.id)}`
+                                    : `The season hasn't started yet, but you can still create an account and check out the rules`}
+                            </> : `Unable to find user data`
+                        }
                     </div>
-                <hr className={styles.divider}/>
+
+                </div>
+                <hr className={styles.divider} />
                 <div className={styles.grid}>
                     {signedIn &&
                         <Link passHref href='/admin'>
-                        <div  className={styles.cardDanger}>
-                            
-                            <h2>Admin Page &rarr;</h2>
-                            <p>Do admin actions like create a new rule</p>
-                        </div>
+                            <div className={styles.cardDanger}>
+
+                                <h2>Admin Page &rarr;</h2>
+                                <p>Do admin actions like create a new rule</p>
+                            </div>
                         </Link>
                     }
                     <Link href="/rules" passHref>
-                     <div className={styles.card}>
-                        <h2>Rule List &rarr;</h2>
-                        <p>See the full list of rules</p>
+                        <div className={styles.card}>
+                            <h2>Rule List &rarr;</h2>
+                            <p>See the full list of rules</p>
                         </div>
                     </Link>
                     <Link href='/scoreboard' passHref>
@@ -116,7 +81,7 @@ const Home: NextPage = () => {
                         </div>
                     </Link>
 
-                    
+
                 </div>
             </main>
 

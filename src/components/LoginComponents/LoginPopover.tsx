@@ -1,4 +1,4 @@
-import Auth from "@aws-amplify/auth"
+import { Auth } from "@aws-amplify/auth";
 import { HubPayload, Logger } from "@aws-amplify/core"
 import { DataStore, Hub } from "aws-amplify"
 import Link from "next/link"

@@ -91,6 +91,7 @@ export const RulesList = (props: RulesListProps) => {
                 </div>}
         <div className={styles.ruleListContainer}>
             {!rules && <Spinner animation='border' variant="light" />}
+            {rules && rules.length === 0 && `There doesn't seem to be any rules, have any been created yet?`}
             {filteredRules?.map(rule => {
                 return <RuleComponent disableButtons={!isCommish} 
                         showAllPoints={showAllPoints} 
