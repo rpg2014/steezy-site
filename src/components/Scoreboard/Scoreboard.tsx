@@ -20,10 +20,13 @@ export const ScoreboardList = () => {
 
     // const [timePeriod, setTimePeriod] = useState<TimePeriod>('all')
 
-
+    
 
     if(!signedIn) {
-        <Alert variant='secondary' >Logging In?</Alert>
+        return <Alert variant='secondary' >Logging In?</Alert>
+    }
+    if(!season) {
+        return <h2 className={styles.container} style={{paddingTop: '5rem'}}>The season hasn't started yet, come back later!</h2>
     }
     if(!scoreDataForTimePeriod){
         return <>
