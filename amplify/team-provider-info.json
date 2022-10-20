@@ -16,5 +16,26 @@
         "Steezy": {}
       }
     }
+  },
+  "prod": {
+    "awscloudformation": {
+      "AuthRoleName": "amplify-steezy-prod-134316-authRole",
+      "UnauthRoleArn": "arn:aws:iam::593242635608:role/amplify-steezy-prod-134316-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::593242635608:role/amplify-steezy-prod-134316-authRole",
+      "Region": "us-west-2",
+      "DeploymentBucketName": "amplify-steezy-prod-134316-deployment",
+      "UnauthRoleName": "amplify-steezy-prod-134316-unauthRole",
+      "StackName": "amplify-steezy-prod-134316",
+      "StackId": "arn:aws:cloudformation:us-west-2:593242635608:stack/amplify-steezy-prod-134316/dab00780-50b7-11ed-896f-0216e1b71921",
+      "AmplifyAppId": "dtkl8sofyo170"
+    },
+    "categories": {
+      "auth": {
+        "Steezy": {}
+      },
+      "api": {
+        "Steezy": {}
+      }
+    }
   }
 }

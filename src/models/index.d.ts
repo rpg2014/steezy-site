@@ -1,4 +1,4 @@
-import { ModelInit, MutableModel, PersistentModelConstructor } from "@aws-amplify/datastore";
+import { ModelInit, MutableModel } from "@aws-amplify/datastore";
 
 export enum Frequency {
   SEASON = "SEASON",
@@ -14,8 +14,6 @@ export enum RiderLevels {
   BLUE = "BLUE",
   GREEN = "GREEN"
 }
-
-
 
 type SeasonMetaData = {
   readOnlyFields: 'createdAt' | 'updatedAt';
