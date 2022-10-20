@@ -65,7 +65,7 @@ export const useCurrentSeason = (): {season: Season | undefined, loading: boolea
 const findSeason = (season: Season) => {
     let startDate = new Date(season.startDate);
     let endDate = new Date(season.endDate)
-    const currentDate = new Date('2022-11-15');
+    const currentDate = new Date();
     
     return currentDate >= startDate && currentDate <= endDate;
 }
