@@ -166,6 +166,8 @@
 
 .filterContainer {
     width: 75%;
+    padding-bottom: 1rem;
+    
     @media (max-width: $breakpoint) {
         width: 100%;
         border-radius: 0;

@@ -86,7 +86,7 @@ const Home: NextPage = () => {
                             Logged in as {riderData?.name}
                             <br />
                             {season? `Number of points earned this season: ${totalPoints}`
-                            : `The season hasn't started yet, but you can still create an account`}
+                            : `The season hasn't started yet, but you can still create an account and check out the rules`}
                             </>
                             }
                         </div>

@@ -2,7 +2,7 @@ import Link from 'next/link';
 import React, { useEffect, useState } from 'react';
 import { useData } from '../../hooks/useData';
 import { useSignedInRider } from '../../hooks/useRider';
-import { RiderLevels, Rule } from '../../models';
+import { Frequency, RiderLevels, Rule } from '../../models';
 import styles from './RulesList.module.scss';
 import { Button, Collapse, Spinner } from 'react-bootstrap';
 import { useRouter } from 'next/router';
@@ -11,6 +11,7 @@ import { RuleComponent } from './Rule';
 import FuzzySearch from 'fuzzy-search';
 import { AddPointsButton } from '../AddPoints/AddPointsButton';
 import { useAuth } from '../../hooks/useAuth';
+import { InputGroup } from '../InputGroup/inputGroup';
 
 
 export type RulesListProps = {
@@ -23,13 +24,15 @@ export const RulesList = (props: RulesListProps) => {
     const { data: rules } = useData(Rule);
     const { isCommish } = useAuth();
     const [selectedRuleIds, setSelectedRuleIds] = useState<string[]>(props.selectedRule !== undefined ? Array.isArray(props.selectedRule) ? props.selectedRule : [props.selectedRule] : [])
-    const [displayedRules, setDisplayedRules] = useState(rules)
+    const [searchedRules, setSearchedRules] = useState(rules)
     const [searchString, setSearchString] = useState<string| undefined>(undefined);
     const [searchObject, setSearchObject] = useState<FuzzySearch<Rule> | null>(null);
     const [showAllPoints, setShowAllPoints] = useState(false);
-
+    
     //eventually save this in local storage.  
     const [showFilters, setShowFilters] = useState(false);
+    const [filters, setFilters] = useState<{frequency: Frequency}>()
+    const [filteredRules, setFilteredRules] = useState(searchedRules)
 
     const { riderData } = useSignedInRider();
 
@@ -41,23 +44,28 @@ export const RulesList = (props: RulesListProps) => {
         setSelectedRuleIds(props.selectedRule !== undefined ? Array.isArray(props.selectedRule) ? props.selectedRule : [props.selectedRule] : [])
     }, [props.selectedRule])
 
-    // useEffect(()=> {
-    //     console.log(displayedRules);
+    useEffect(()=> {
+        if(filters?.frequency){
+            setFilteredRules(searchedRules?.filter((rule) => rule.frequency === filters.frequency))
+        }else {
+            setFilteredRules(searchedRules)
+        }
         
-    // },[displayedRules])
+        
+    },[searchedRules, filters?.frequency])
 
     // update the displayedrules list when rules updates.  
     // will be used for when there are filters more
     // is rn unneccessary
     useEffect(()=>{
-        if(rules && !displayedRules){
+        if(rules && !searchedRules){
             setSearchObject(new FuzzySearch(rules, ['name','description'],{caseSensitive: false, sort: true}))
-            setDisplayedRules(rules)
+            setSearchedRules(rules)
         }
         
-    },[rules, displayedRules])
+    },[rules, searchedRules])
 
-    const searchFunction = () => setDisplayedRules( searchObject?.search(searchString))
+    const searchFunction = () => setSearchedRules( searchObject?.search(searchString))
 
     return <div className={styles.ruleListPageContainer}>
         <div className={styles.title}  >
@@ -71,12 +79,18 @@ export const RulesList = (props: RulesListProps) => {
         {rules &&
         <div className={styles.searchBarContainer}>
             <SearchBar onKeyUp={()=> searchFunction()} setValue={(value: string)=> setSearchString(value)} />   
-            {/* <Button variant='outline-light' size='sm' className={styles.filterButton}>Filters</Button> */}
+            <Button variant='outline-light' size='sm' onClick={()=> setShowFilters(!showFilters)} className={styles.filterButton}>Filters</Button>
+            
             </div>
         }
+        {showFilters && <div className={styles.filterContainer}>
+                <InputGroup label='Rule Frequency' select={{ options: [undefined].concat(Object.keys(Frequency)) }} name='frequency' type='text' 
+                setFormState={setFilters} value={filters?.frequency}  />
+                <Button variant='outline-info' size='sm' onClick={()=> {setFilters(undefined); setShowFilters(false)}} className={styles.filterButton}>Clear Filters</Button>
+                </div>}
         <div className={styles.ruleListContainer}>
             {!rules && <Spinner animation='border' variant="light" />}
-            {displayedRules?.map(rule => {
+            {filteredRules?.map(rule => {
                 return <RuleComponent disableButtons={!isCommish} 
                         showAllPoints={showAllPoints} 
                         key={rule.id} 
