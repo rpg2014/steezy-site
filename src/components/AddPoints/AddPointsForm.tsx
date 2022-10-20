@@ -6,10 +6,11 @@ import React, { useEffect, useState } from 'react';
 import { Alert, Button, Spinner } from 'react-bootstrap';
 import { toast } from 'react-toastify';
 import { useAsyncAction } from '../../hooks/useAsyncAction';
+import { useAuth } from '../../hooks/useAuth';
 import { useCurrentSeason, useData } from '../../hooks/useData';
 import { useSignedInRider } from '../../hooks/useRider';
 import { EarnedPoint, Rider, RiderLevels, Rule } from '../../models';
-import { riderLevelToPointsMap } from '../../utils/utils';
+import { combineStyles, riderLevelToPointsMap } from '../../utils/utils';
 import { RuleComponent } from '../Rules/Rule';
 import styles from './AddPointsForm.module.scss';
 
@@ -17,12 +18,13 @@ import styles from './AddPointsForm.module.scss';
 //Maybe add button to go to rule when selectedRules is empty?
 export const AddPointsForm = (props: {ruleIds?: string[]} ) => {
     const {riderData} = useSignedInRider();
+    const {signedIn} = useAuth();
     
     const {data: rules} = useData(Rule, props.ruleIds)
 
     // const[selectedRules, setSelectedRules] = useState(props.ruleIds && data ? data : []);
     const [date, setDate] = useState(new Date());
-    const {season, loading: seasonLoading, error: seasonError} = useCurrentSeason();
+    const {season, loading: seasonLoading} = useCurrentSeason();
 
     
 
@@ -57,11 +59,11 @@ export const AddPointsForm = (props: {ruleIds?: string[]} ) => {
     const { data, error: submitError, loading: submitLoading, execute: executeCreatePoints } = useAsyncAction<EarnedPoint[]>(createPoints);
 
 
-    if(!riderData) {
+    if(!riderData && !signedIn ) {
         return <Alert style={{marginTop: '1rem'}} variant='danger'>Please sign in or <Link href='/create-account'> create an account</Link></Alert>
     }
-    if(!rules){
-        return <Spinner animation='border'/>
+    if(!rules || !riderData){
+        return <div ><Spinner variant='dark' animation='border'/></div>
     }
     
     return (

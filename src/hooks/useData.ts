@@ -36,27 +36,27 @@ export const useUpdatingData=<T extends PersistentModel>(type: PersistentModelCo
 
 
 
-export const useCurrentSeason = (): {season: Season | undefined, loading: boolean, error: Error | undefined} => {
-    const {signedIn} = useAuth();
-    const {execute, error, data, loading} = useAsyncAction<Season | undefined>(() => {
-        return DataStore.query(Season).then(seasons => {
-            
-    
-            return seasons.find(season => {
-                let startDate = new Date(season.startDate);
-                let endDate = new Date(season.endDate)
-                const currentDate = new Date();
-                
-                return currentDate >= startDate && currentDate <= endDate;
-            })
-        })
-    })
-    useEffect(()=>{
-        if(signedIn){
-            execute();
-        }   
-    },[signedIn])
-    
+export const useCurrentSeason = (): {season: Season | undefined, loading: boolean} => {
+    const {data: seasons} = useData(Season)
+    let currentSeasonInit;
+    if(seasons && seasons.length > 0){
+        currentSeasonInit = seasons.find(findSeason)
+    }
 
-    return {season: data, loading, error }
+    useEffect(() => {
+        if(seasons) {
+            setCurrentSeason(seasons.find(findSeason))
+        }
+    }, [seasons])
+
+    const [currentSeason, setCurrentSeason] = useState(currentSeasonInit)
+
+    return {season: currentSeason, loading: !seasons }
+}
+const findSeason = (season: Season) => {
+    let startDate = new Date(season.startDate);
+    let endDate = new Date(season.endDate)
+    const currentDate = new Date();
+    
+    return currentDate >= startDate && currentDate <= endDate;
 }

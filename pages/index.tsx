@@ -72,6 +72,9 @@ const Home: NextPage = () => {
                 <h1 className={styles.title}>
                     Welcome to Steezy
                 </h1>
+                <h2>
+                  {season && `Welcome to the ${season?.name}!`}
+                </h2>
                 <div className={styles.description}>
                         <div>
                             {!signedIn &&
@@ -79,13 +82,11 @@ const Home: NextPage = () => {
                                 Please log in or <Link href='/create-account'> create an account</Link>
                             </Alert>}
                             {signedIn && <>
-                            CognitoId is {cognitoId}
+                            
+                            Logged in as {riderData?.name}
                             <br />
-                            Name is {riderData?.name}
-                            <br />
-                            email is {email}
-                            <br />
-                            Number of points earned: {totalPoints}
+                            {season? `Number of points earned this season: ${totalPoints}`
+                            : `The season hasn't started yet, but you can still create an account and check out the rules`}
                             </>
                             }
                         </div>
@@ -106,6 +107,12 @@ const Home: NextPage = () => {
                      <div className={styles.card}>
                         <h2>Rule List &rarr;</h2>
                         <p>See the full list of rules</p>
+                        </div>
+                    </Link>
+                    <Link href='/scoreboard' passHref>
+                        <div className={styles.card}>
+                            <h2>Scoreboard &rarr;</h2>
+                            <p>See the Seasons scores</p>
                         </div>
                     </Link>
 
