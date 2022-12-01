@@ -5,20 +5,24 @@
     margin-top: 1.0rem;
 }
 
-.periodSelector{
-    display: flex;
-    flex-direction: row;
-    justify-content: space-evenly;
-    width: 75%;
-}
+
 .rider {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
     width: 100%;
     padding: 0.5rem 1.25rem;
+    margin: 0.5rem 1.25rem;
+    
 }
-
+.riderLink {
+    cursor: pointer;
+    &:hover{
+        text-decoration: underline;
+        // border: 1px solid $black;
+    }
+    
+}
 .progressBar {
     width: 75%;
     margin-bottom: 2rem;
