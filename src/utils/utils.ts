@@ -23,3 +23,7 @@ export const getPoints = (levelPointsMap: any, riderLevel: RiderLevels | keyof t
     //@ts-ignore: We verify the rider level is in the map or we show 0
     return riderLevelToPointsMap.has(riderLevel as RiderLevels) ? levelPointsMap[riderLevelToPointsMap.get(riderLevel)] : '0'
 }
+
+
+
+export const tagOptions = [undefined, "ACTION", "STEVENS_RUN", "WHISTLER_RUN"];

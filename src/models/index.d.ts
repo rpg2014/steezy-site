@@ -75,6 +75,7 @@ export declare class Rule {
   readonly earnedPoints?: (EarnedPoint | null)[] | null;
   readonly levelPointsMap: string;
   readonly lastEditedByCognitoId?: string | null;
+  readonly tags?: (string | null)[] | null;
   readonly createdAt?: string | null;
   readonly updatedAt?: string | null;
   constructor(init: ModelInit<Rule, RuleMetaData>);

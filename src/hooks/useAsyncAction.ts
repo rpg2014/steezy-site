@@ -16,7 +16,7 @@ export const useAsyncAction = <T>(fn: ()=> Promise<T>)=> {
                 setData(result)
             })
             .catch((err) => {
-                console.log("in Error: "+ JSON.stringify(err))
+                console.error("in Error: "+ JSON.stringify(err))
                 setError(err);
                 setIsLoading(false);
             })

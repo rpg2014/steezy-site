@@ -45,5 +45,6 @@ type Rule @model @auth(rules: [{allow: private, operations: [read, update]}, {al
   earnedPoints: [EarnedPoint] @hasMany(indexName: "byRule", fields: ["id"])
   levelPointsMap: AWSJSON!
   lastEditedByCognitoId: ID
+  tags: [String]
 }
  

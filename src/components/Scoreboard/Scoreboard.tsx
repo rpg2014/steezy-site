@@ -39,7 +39,8 @@ export const ScoreboardList = () => {
                     <h4 className={styles.scoreboardContainer}>Calculating Scores... {loadingPercent}% completed</h4>
                     <ProgressBar className={styles.progressBar} animated now={loadingPercent} />
                 </div>
-                : riders?.map(rider => <RiderComp key={rider.id} rider={rider} score={scoreMapForPeriod.get(rider.id)} />)}
+                //@ts-ignore: undefined is 0?
+                : riders?.sort((a,b) => scoreMapForPeriod.get(b.id) - scoreMapForPeriod.get(a.id)).map(rider => <RiderComp key={rider.id} rider={rider} score={scoreMapForPeriod.get(rider.id)} />)}
             </div>
         </div>
     </>)
@@ -47,12 +48,12 @@ export const ScoreboardList = () => {
 
 
 const RiderComp = (props: { rider: Rider, score?: number }) => {
-    return (<div className={combineStyles(styles.rider, styles.riderLink)}>
-        <Link href={`/scores/${props.rider.id}`}>
-            <div className={styles.riderLink}>
+    return (<div className={combineStyles(styles.rider, '')}> {/* styles.riderLink*/}
+        {/* <Link href={`/scores/${props.rider.id}`}> */}
+            <div>
             {props.rider.name}
             </div>
-        </Link>
+        {/* </Link> */}
         <div className={styles.totalPoints}>
             Points: {props.score ? props.score.toLocaleString() : 0}
         </div>
