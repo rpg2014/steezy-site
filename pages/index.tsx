@@ -28,7 +28,7 @@ const Home: NextPage = () => {
     const { scoresByRiderId, loadingPercent } = useRiderScores();
 
     const auth = useAuth();
-    const { cognitoId, name, email, signedIn } = auth;
+    const { cognitoId, name, email, signedIn, isCommish } = auth;
 
 
     return (
@@ -59,7 +59,7 @@ const Home: NextPage = () => {
                 </div>
                 <hr className={styles.divider} />
                 <div className={styles.grid}>
-                    {signedIn &&
+                    {signedIn && isCommish &&
                         <Link passHref href='/admin'>
                             <div className={styles.cardDanger}>
 

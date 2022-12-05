@@ -16,3 +16,14 @@ export const riderLevelToPointsMap: Map<RiderLevels,string> = new Map()
 .set(RiderLevels.BLUE, "bluePoints")
 .set(RiderLevels.BLACK, "blackPoints")
 .set(RiderLevels.DOUBLEBLACK, "doubleBlackPoints")
+
+
+
+export const getPoints = (levelPointsMap: any, riderLevel: RiderLevels | keyof typeof RiderLevels) => {
+    //@ts-ignore: We verify the rider level is in the map or we show 0
+    return riderLevelToPointsMap.has(riderLevel as RiderLevels) ? levelPointsMap[riderLevelToPointsMap.get(riderLevel)] : '0'
+}
+
+
+
+export const tagOptions = [undefined, "ACTION", "STEVENS_RUN", "WHISTLER_RUN"];

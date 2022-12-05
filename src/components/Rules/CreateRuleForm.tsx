@@ -8,7 +8,7 @@ import { useAuth } from "../../hooks/useAuth"
 import { useData } from "../../hooks/useData"
 import { useSignedInRider } from "../../hooks/useRider"
 import { Frequency, RiderLevels, Rule } from "../../models"
-import { riderLevelToPointsMap } from "../../utils/utils"
+import { riderLevelToPointsMap, tagOptions } from "../../utils/utils"
 import { InputGroup } from "../InputGroup/inputGroup"
 import { SteezyNavBar } from "../Layout/NavBar"
 import styles from './CreateRuleForm.module.scss'
@@ -22,6 +22,7 @@ interface FormState {
     bluePoints: number,
     blackPoints: number,
     doubleBlackPoints: number,
+    tags?: (string | null)[] | null,
 }
 const initalFormState: FormState = {
     name: "",
@@ -38,6 +39,7 @@ const initalFormState: FormState = {
 // will need to show error if you dont have permissions?
 export const CreateRuleForm = ({ ruleId }: { ruleId?: string | null }) => {
     const [formState, setFormState] = useState<FormState>(initalFormState)
+    const [simplePoints, setSimplePoints] = useState(true)
 
     const [loading, setLoading] = useState(ruleId ? true : false);
     const [error, setError] = useState();
@@ -53,10 +55,12 @@ export const CreateRuleForm = ({ ruleId }: { ruleId?: string | null }) => {
                 try{
                     const original = await DataStore.query(Rule, ruleId)
                     if (original) {
+                        setSimplePoints(false)
                         setFormState({
                             name: original.name,
                             description: original.description,
                             frequency: original.frequency as Frequency,
+                            tags: original.tags,
                             //@ts-ignore: We verify that green is present, before getting
                             greenPoints: riderLevelToPointsMap.has(RiderLevels.GREEN) ? original.levelPointsMap[riderLevelToPointsMap.get(RiderLevels.GREEN)] : 0,
                             //@ts-ignore: We verify that green is present, before getting
@@ -86,6 +90,16 @@ export const CreateRuleForm = ({ ruleId }: { ruleId?: string | null }) => {
         } else if (formState.greenPoints === 0 && formState.bluePoints === 0 && formState.blackPoints === 0 && formState.doubleBlackPoints === 0) {
             throw new Error("Can't create a rule with all points as 0");
         } else {
+
+            let tags: (string | null)[] | null | undefined = undefined
+            if(formState.tags) {
+                if(Array.isArray(formState.tags)) {
+                    tags = formState.tags
+                }else {
+                    tags = [formState.tags]
+                }
+            }
+
             // Long term todo: if name is same or similar, suggest rule to edit instead, see comment below
             if (ruleId) {
 
@@ -96,6 +110,7 @@ export const CreateRuleForm = ({ ruleId }: { ruleId?: string | null }) => {
                             updated.description = formState.description;
                             updated.frequency = formState.frequency;
                             updated.lastEditedByCognitoId = cognitoId;
+                            updated.tags = tags,
                             updated.levelPointsMap = JSON.stringify({
                                 greenPoints: formState.greenPoints,
                                 bluePoints: formState.bluePoints,
@@ -110,6 +125,7 @@ export const CreateRuleForm = ({ ruleId }: { ruleId?: string | null }) => {
                             description: formState.description,
                             frequency: formState.frequency,
                             lastEditedByCognitoId: cognitoId,
+                            tags: tags,
                             levelPointsMap: JSON.stringify({
                                 greenPoints: formState.greenPoints,
                                 bluePoints: formState.bluePoints,
@@ -126,6 +142,7 @@ export const CreateRuleForm = ({ ruleId }: { ruleId?: string | null }) => {
                     description: formState.description,
                     frequency: formState.frequency,
                     lastEditedByCognitoId: cognitoId,
+                    tags: tags,
                     levelPointsMap: JSON.stringify({
                         greenPoints: formState.greenPoints,
                         bluePoints: formState.bluePoints,
@@ -173,12 +190,40 @@ export const CreateRuleForm = ({ ruleId }: { ruleId?: string | null }) => {
                         <InputGroup label='Rule Name' name='name' type='text' setFormState={setFormState} value={formState.name} />
                         <InputGroup label='How do you earn it?' name='description' type='text' setFormState={setFormState} value={formState.description} />
                         <InputGroup label='How Often?' select={{ options: Object.keys(Frequency) }} name='frequency' type='text' setFormState={setFormState} value={formState.frequency} />
-                        <h4 className=''>Points</h4>
-                        <InputGroup label='Green Rider Points' name='greenPoints' setFormState={setFormState} value={formState.greenPoints.toString()} />
-                        <InputGroup label='Blue Rider Points' name='bluePoints' setFormState={setFormState} value={formState.bluePoints.toString()} />
-                        <InputGroup label='Black Rider Points' name='blackPoints' setFormState={setFormState} value={formState.blackPoints.toString()} />
-                        <InputGroup label='Double Black Rider Points' name='doubleBlackPoints' setFormState={setFormState} value={formState.doubleBlackPoints.toString()} />
+                        {/* @ts-ignore */}
+                        <InputGroup label='Tags' name="tags" select={{options: tagOptions}} setFormState={setFormState} value={formState.tags?.toString()}></InputGroup>
+                        <div className={styles.pointsHeader}>
+                            <h4 className=''>Points</h4>
+                            <div className={styles.simplePointsWrapper} onClick={() => setSimplePoints(!simplePoints)}>
+                                <input readOnly type='checkbox' name="simplePoints" id='point_input' checked={simplePoints}></input>
+                                <label >&nbsp;Simple Points</label>
+                            </div>
+                        </div>
+                        {!simplePoints ?
+                            <>
+                                <InputGroup label='Green Rider Points' name='greenPoints' setFormState={setFormState} value={formState.greenPoints.toString()} />
+                                <InputGroup label='Blue Rider Points' name='bluePoints' setFormState={setFormState} value={formState.bluePoints.toString()} />
+                                <InputGroup label='Black Rider Points' name='blackPoints' setFormState={setFormState} value={formState.blackPoints.toString()} />
+                                <InputGroup label='Double Black Rider Points' name='doubleBlackPoints' setFormState={setFormState} value={formState.doubleBlackPoints.toString()} />
+                                
+                            </>
+                        :
+                            <>
+                                <InputGroup label='Points for all levels' name="points" setFormState={(fn: (state: any) => any)=> {
+                                    const newValues= fn({})
+                                    console.log(JSON.stringify(newValues))
+                                    setFormState({
+                                        ...formState,
+                                        greenPoints: newValues.points,
+                                        bluePoints: newValues.points,
+                                        blackPoints: newValues.points,
+                                        doubleBlackPoints: newValues.points,
+                                    })
 
+                                }}/>
+                            </>
+                        }
+                        
 
                         <div className={styles.formInteractionContainer}>
                             {submitLoading ? <Spinner animation='border' variant="light" /> :

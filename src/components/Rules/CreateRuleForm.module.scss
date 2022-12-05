@@ -86,3 +86,14 @@
     margin-right: 3rem;
     
 }
+
+.pointsHeader{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+.simplePointsWrapper {
+    margin: 0 5rem;
+    align-items: center;
+    vertical-align:middle;
+}

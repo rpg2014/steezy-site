@@ -1,0 +1,27 @@
+@import '/styles/components.module.scss';
+
+
+
+.pointList{
+    margin-bottom: 1rem;
+}
+.pointContainer {
+    // width: 100%;
+    width: 75%;
+    padding: 0 2rem;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    // margin: 0.5rem 3rem;
+    padding: 0.5rem 3rem;
+    border: white 1px solid;
+
+    border-radius: 5px;
+}
+
+.dateHeader {
+    margin: 0.5rem;
+}
+.ruleName {
+    font-size: larger;
+}

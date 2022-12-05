@@ -12,6 +12,7 @@ import FuzzySearch from 'fuzzy-search';
 import { AddPointsButton } from '../AddPoints/AddPointsButton';
 import { useAuth } from '../../hooks/useAuth';
 import { InputGroup } from '../InputGroup/inputGroup';
+import { tagOptions } from '../../utils/utils';
 
 
 export type RulesListProps = {
@@ -28,16 +29,24 @@ export const RulesList = (props: RulesListProps) => {
     const [searchString, setSearchString] = useState<string| undefined>(undefined);
     const [searchObject, setSearchObject] = useState<FuzzySearch<Rule> | null>(null);
     const [showAllPoints, setShowAllPoints] = useState(false);
+    const [disableButtons, setDisableButtons] = useState(false)
     
     //eventually save this in local storage.  
     const [showFilters, setShowFilters] = useState(false);
-    const [filters, setFilters] = useState<{frequency: Frequency}>()
+    const [filters, setFilters] = useState<{frequency: Frequency, tags: string}>()
     const [filteredRules, setFilteredRules] = useState(searchedRules)
 
     const { riderData } = useSignedInRider();
 
 
     const router = useRouter();
+    useEffect(()=>{
+        //@ts-ignore
+        if(!window.disableButtons){
+            //@ts-ignore
+            window.disableButtons = () => setDisableButtons(true)
+        }
+    }, [])
 
     // set the selected rules from the query props
     useEffect(() => {
@@ -45,14 +54,19 @@ export const RulesList = (props: RulesListProps) => {
     }, [props.selectedRule])
 
     useEffect(()=> {
+        let filteredRules = searchedRules;
         if(filters?.frequency){
-            setFilteredRules(searchedRules?.filter((rule) => rule.frequency === filters.frequency))
-        }else {
-            setFilteredRules(searchedRules)
+            filteredRules = (filteredRules?.filter((rule) => rule.frequency === filters.frequency))
+        }
+        if(filters?.tags) {
+            filteredRules = filteredRules?.filter((rule) => rule.tags?.includes(filters.tags))
         }
         
+        setFilteredRules(filteredRules)
         
-    },[searchedRules, filters?.frequency])
+        
+        
+    },[searchedRules, filters?.frequency, filters?.tags])
 
     // update the displayedrules list when rules updates.  
     // will be used for when there are filters more
@@ -87,14 +101,28 @@ export const RulesList = (props: RulesListProps) => {
             {/* @ts-ignore */}
                 <InputGroup label='Rule Frequency' select={{ options: [undefined].concat(Object.keys(Frequency)) }} name='frequency' type='text' 
                 setFormState={setFilters} value={filters?.frequency}  />
+                {/* @ts-ignore */}
+                <InputGroup label='Rule Tags' select={{options: tagOptions}} name='tags' type='text' setFormState={setFilters} value={filters?.tags} />
                 <Button variant='outline-info' size='sm' onClick={()=> {setFilters(undefined); setShowFilters(false)}} className={styles.filterButton}>Clear Filters</Button>
+
+                {/* Code to disable the buttons if they are a commish
+                {isCommish &&
+            <div className={styles.simplePointsWrapper} onClick={() => {
+                setDisableButtons(!disableButtons)
+                // router.push({ query: '' }, undefined ,{scroll: false})
+            }}>
+                <input readOnly type='checkbox' name="disableButtons" id='buttonInput' checked={disableButtons}></input>
+                <label >&nbsp;Disable Buttons</label>
+            </div>
+        } */}
                 </div>}
         <div className={styles.ruleListContainer}>
             {!rules && <Spinner animation='border' variant="light" />}
             {rules && rules.length === 0 && `There doesn't seem to be any rules, have any been created yet?`}
             {filteredRules?.map(rule => {
-                return <RuleComponent disableButtons={!isCommish} 
+                return <RuleComponent disableButtons={!isCommish || disableButtons} 
                         showAllPoints={showAllPoints} 
+                        smallVersion
                         key={rule.id} 
                         rule={rule} 
                         selected={selectedRuleIds.includes(rule.id)} 
@@ -108,7 +136,7 @@ export const RulesList = (props: RulesListProps) => {
                             }
                             newList.forEach((ruleId) => params.append("ruleId", ruleId));
 
-                            router.push({ query: params.toString() })
+                            router.push({ query: params.toString() }, undefined ,{scroll: false})
                             setSelectedRuleIds(newList)
                         }} 
                 />

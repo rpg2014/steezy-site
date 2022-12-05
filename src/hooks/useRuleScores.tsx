@@ -4,7 +4,7 @@ import rules from "../../pages/rules";
 import { CalcuationEngine } from "../../steezy-wasm/pkg/steezy_wasm";
 import { TimePeriod } from "../components/Scoreboard/Scoreboard";
 import { EarnedPoint, Rider, RiderLevels, Rule, Season } from "../models";
-import { useCurrentSeason, useData } from "./useData";
+import { useCurrentSeason, useData, useUpdatingData } from "./useData";
 import { riderLevelToPointsMap } from '../utils/utils';
 import internal from "stream";
 
