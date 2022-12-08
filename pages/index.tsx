@@ -6,17 +6,16 @@ import Head from 'next/head'
 import Link from 'next/link'
 import React, { useEffect, useState } from 'react'
 import { Alert, Button } from 'react-bootstrap'
-import { SignInOutButton } from '../src/components/LoginComponents/LoginPopover'
-import { SteezyNavBar } from '../src/components/Layout/NavBar'
 import { useAuth } from '../src/hooks/useAuth'
-import { useSyncStatus } from '../src/hooks/useSyncStatus'
-import { EarnedPoint, Rider, Rule, Season } from '../src/models'
 import styles from '../styles/Home.module.scss'
 // import { CalcuationEngine } from '../steezy-wasm/pkg/steezy_wasm'
 import { useCurrentSeason, useData } from '../src/hooks/useData'
 import { useSignedInRider } from '../src/hooks/useRider'
 import { riderLevelToPointsMap } from '../src/utils/utils'
 import { useRiderScores } from '../src/hooks/useRuleScores'
+import {DateTime} from 'luxon'
+import { TimePeriod } from '../src/components/Scoreboard/Scoreboard'
+import { TimePeriodSelector } from '../src/components/TimePeriodSelector/TimePeriodSelector'
 
 
 // let engine: CalcuationEngine;
@@ -25,12 +24,19 @@ const Home: NextPage = () => {
 
     const { riderData } = useSignedInRider();
     const { season } = useCurrentSeason();
-    const { scoresByRiderId, loadingPercent } = useRiderScores();
+    const { scoresByRiderId, currentTimePeriod, setTimePeriod } = useRiderScores();
 
     const auth = useAuth();
     const { cognitoId, name, email, signedIn, isCommish } = auth;
 
-
+    const toggleTimePeriod = () => {
+        if(currentTimePeriod === 'all') {
+            //@ts-ignore: this should be safe, as long as there is a valid current season when this is called.  
+            setTimePeriod(new Date().getMonth() as TimePeriod)
+        }else {
+            setTimePeriod('all')
+        }
+    }
     return (
         <>
             <main className={styles.main}>
@@ -48,10 +54,14 @@ const Home: NextPage = () => {
                             </Alert>}
                         {signedIn && riderData ?
                             <>
-                                Logged in as {riderData.name}
-                                <br />
-                                {season ? `Number of points earned this season: ${scoresByRiderId?.get(riderData.id)}`
-                                    : `The season hasn't started yet, but you can still create an account and check out the rules`}
+                            {season && 
+                                <div className={styles.container} onClick={toggleTimePeriod}>
+                                    {`Points earned ${currentTimePeriod !=='all' ? `in ${DateTime.fromObject({month: Number.parseInt(currentTimePeriod) + 1}).monthLong}`: 'this season'}: `}
+                                    <span style={{marginTop: '1rem', fontSize: "larger"}}>{`${scoresByRiderId?.get(riderData.id) ? scoresByRiderId.get(riderData.id)?.toLocaleString(): "Loading"}`}</span>
+                                </div>}
+                                {/* {season && <Leaderboard />} */}
+                                {/* <br /> */}
+                                { !season && `The season hasn't started yet, but you can still create an account and check out the rules`}
                             </> : `Unable to find user data`
                         }
                     </div>
@@ -108,3 +118,29 @@ const Home: NextPage = () => {
 }
 
 export default Home
+
+
+
+// const Leaderboard = () => {
+//     const {currentTimePeriod, scoresByRiderId, setTimePeriod} = useRiderScores();
+//     useEffect(() => {
+//         if(currentTimePeriod !== new Date().getMonth().toString()) {
+//             //@ts-ignore;
+//             setTimePeriod(new Date().getMonth() as TimePeriod)
+//         }
+//     })
+//     let leaderboard = [];
+//     if(scoresByRiderId){
+//         let riderList = Array.from(scoresByRiderId.keys())
+//         riderList.sort((a, b) => scoresByRiderId.get(b) - scoresByRiderId.get(a))
+//         console.log(riderList)
+//         riderList.slice(0,3).forEach(rider => {
+//             leaderboard.push(<div><span>{rider}</span><span>{scoresByRiderId.get(rider)}</span></div>)
+//         })
+//     }
+//     return <>
+//     Leaderboard for {DateTime.fromObject({month: new Date().getMonth() +1}).monthLong}
+//     <hr />
+//     {leaderboard}
+//     </>
+// }

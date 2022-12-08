@@ -2,6 +2,9 @@
 @import '/styles/variables.module.scss';
 
 
+.title {
+    padding-top: 1rem;
+}
 
 .pointList{
     margin-bottom: 1rem;
@@ -14,10 +17,16 @@
     flex-direction: row;
     justify-content: space-between;
     // margin: 0.5rem 3rem;
-    padding: 0.25rem 3rem;
+    padding: 0.25rem 2rem;
     border: $light 1px solid;
 
     border-radius: 5px;
+    background-color: $dark;
+    color: $light;
+    @media (max-width: $breakpoint) {
+        padding: 0.25rem 1.5rem;
+        width: 85%;
+    }
 }
 
 .dateHeader {

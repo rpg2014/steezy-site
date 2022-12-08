@@ -18,6 +18,7 @@ type ScoreContext = {
     currentTimePeriod: TimePeriod
     setTimePeriod: (period: TimePeriod) => void;
     loadingPercent: number;
+    scoresByTimePeriodByRiderId?: Map<TimePeriod, Map<string, number>> | undefined;
 }
 
 const scoreContext = createContext<ScoreContext>(
@@ -34,7 +35,6 @@ export const ProvideScore = ({children}: {children: React.ReactNode}) => {
 
 
 export const useRiderScores = (): ScoreContext => {
-
     return useContext(scoreContext);
 }
 
@@ -42,7 +42,7 @@ export const useRiderScores = (): ScoreContext => {
 
 
 // Get a single riders points. 
-const getSumOfPoints = async (riderId: string, riderLevel: RiderLevels, season: Season, timePeriod: TimePeriod): Promise<number> => {
+export const getSumOfPoints = async (riderId: string, riderLevel: RiderLevels, season: Season, timePeriod: TimePeriod): Promise<number> => {
     // first gets  all of the earned points for current rider
     let ridersEarnedPoints = await DataStore.query(EarnedPoint, c=> c.riderID('eq', riderId).seasonID('eq',season.id))
 
@@ -52,12 +52,7 @@ const getSumOfPoints = async (riderId: string, riderLevel: RiderLevels, season: 
         ridersEarnedPoints = ridersEarnedPoints.filter(point=> new Date(point.date).getMonth() === Number.parseInt(timePeriod))
     }
     // then map that list of earned POints to rules, so we can get the points per rule
-    let ruleListForEarnedPointsPromise = ridersEarnedPoints.map(point=> DataStore.query(Rule, r => r.id('eq', point.ruleID)).then(rules=> {
-        if(rules.length !== 1){
-            console.log('something is broken');
-        }
-        return rules[0];
-    }))
+    let ruleListForEarnedPointsPromise = ridersEarnedPoints.map(point=> DataStore.query(Rule, point.ruleID))
     // await the promise due to the return type of Datastore, could combine with above line.
     let rules = await Promise.all(ruleListForEarnedPointsPromise)
     // sum them up
@@ -80,6 +75,15 @@ export const useProvideRiderScores = () => {
     const [loadingPercent, setLoadingPercent] = useState(1);
     const [scoreState, setScoreState] = useState<ScoreState>(new Map())
 
+    const setTimePeriodSaved = (value: TimePeriod) => {
+        localStorage.setItem('steezy_selected_time_period', value)
+        setTimePeriod(value);
+    }
+
+    useEffect(()=> {
+        setTimePeriod(localStorage.getItem('steezy_selected_time_period') as TimePeriod)
+    },[])
+
     useEffect(()=> {
         //Sums up all of the earned points for a rider for the current time period. 
         const getAllRidersPoints = async () => {
@@ -100,5 +104,8 @@ export const useProvideRiderScores = () => {
         getAllRidersPoints();
     },[riders, timePeriod, season, setScoreState])
 
-    return {scoresByRiderId: scoreState.get(timePeriod), setTimePeriod, loadingPercent, currentTimePeriod: timePeriod}
+    return {scoresByRiderId: scoreState.get(timePeriod), setTimePeriod: setTimePeriodSaved, loadingPercent, currentTimePeriod: timePeriod, scoresByTimePeriodByRiderId: scoreState}
 }
+
+
+

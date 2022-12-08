@@ -10,6 +10,7 @@ class MyDocument extends Document {
     return (
       <Html>
         <Head >
+          {/* TODO: find a better font */}
         <link rel="preconnect" href="https://fonts.googleapis.com"/>
         <link href="https://fonts.googleapis.com/css2?family=Lato&display=swap" rel="stylesheet"/> 
         <meta name='application-name' content='Steezy Stevens' />

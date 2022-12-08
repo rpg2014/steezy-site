@@ -19,7 +19,7 @@ export const RiderScoreComponent = (props: {riderId?: string}) => {
     useEffect(()=> {
         let queryData = async () => {
             let allPoints = await DataStore.query(EarnedPoint);
-            setEarnedPoints(allPoints.filter(earnedPoint => earnedPoint.riderID === currentRider?.id).filter(earnedPoint => currentTimePeriod === "all" || new Date(earnedPoint.date).getMonth().toString() === currentTimePeriod))
+            setEarnedPoints(allPoints.filter(earnedPoint => earnedPoint.riderID === currentRider?.id).filter(earnedPoint => currentTimePeriod === "all" || new Date(earnedPoint.date).getMonth().toString() === currentTimePeriod.toString()))
         }
         queryData();
     },[currentRider, currentTimePeriod])
@@ -35,7 +35,7 @@ export const RiderScoreComponent = (props: {riderId?: string}) => {
     // console.log(rider[0])
     return (
     <div className={combineStyles(styles.formContainer, styles.container)}>
-        <h1 className={styles.scoreboardContainer}>{currentRider.name}'s Scores</h1>
+        <h1 className={styles.title}>{currentRider.name}'s Scores</h1>
         <TimePeriodSelector currentTimePeriod={currentTimePeriod} setTimePeriod={setTimePeriod} />
         <p>Total Score for period: {scoresByRiderId?.get(currentRider.id)}</p>
         <div className={combineStyles(styles.container, styles.pointList)}>
@@ -44,7 +44,7 @@ export const RiderScoreComponent = (props: {riderId?: string}) => {
     </div>)
 }
 
-const PointsList= memo(function PointsList({points, riderLevel}: {points?: EarnedPoint[]; riderLevel: RiderLevels | keyof typeof RiderLevels}) {
+const PointsList = memo(function PointsList({points, riderLevel}: {points?: EarnedPoint[]; riderLevel: RiderLevels | keyof typeof RiderLevels}) {
     
     if(!points) {
         return <>{"Loading "} <Spinner animation='border'/> </>
@@ -56,7 +56,7 @@ const PointsList= memo(function PointsList({points, riderLevel}: {points?: Earne
     let currentDate = new Date(points[0].date);
     let list = [];
     
-    list.push(<div className={styles.dateHeader} >{new Date(points[0].date).toLocaleDateString(undefined, {timeZone: "UTC"})}</div>)
+    list.push(<div key={'firstInList'} className={styles.dateHeader} >{new Date(points[0].date).toLocaleDateString(undefined, {timeZone: "UTC"})}</div>)
     for (let point of points) {
     
         const pointDate = new Date(point.date)
@@ -80,10 +80,9 @@ const PointComponent = memo(function PointComponent({earnedPoint, riderLevel}: {
     }
     return <div key={earnedPoint.ruleID} className={styles.pointContainer}>
         <div className={styles.ruleName}>
-            
             {rule.name}
         </div>
-        <span>{getPoints(rule.levelPointsMap, riderLevel)}</span>
+        <span>{getPoints(rule.levelPointsMap, riderLevel).toLocaleString()}</span>
     </div>
 }, (a,b)=> a.earnedPoint.id === b.earnedPoint.id)
 

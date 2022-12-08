@@ -19,9 +19,9 @@ export const riderLevelToPointsMap: Map<RiderLevels,string> = new Map()
 
 
 
-export const getPoints = (levelPointsMap: any, riderLevel: RiderLevels | keyof typeof RiderLevels) => {
+export const getPoints = (levelPointsMap: any, riderLevel: RiderLevels | keyof typeof RiderLevels): number => {
     //@ts-ignore: We verify the rider level is in the map or we show 0
-    return riderLevelToPointsMap.has(riderLevel as RiderLevels) ? levelPointsMap[riderLevelToPointsMap.get(riderLevel)] : '0'
+    return riderLevelToPointsMap.has(riderLevel as RiderLevels) ? Number.parseInt(levelPointsMap[riderLevelToPointsMap.get(riderLevel)]) : '0'
 }
 
 

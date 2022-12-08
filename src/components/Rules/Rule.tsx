@@ -41,7 +41,7 @@ export const RuleComponent = ({ rule, selected, addToSelected, showAllPoints = f
                 </div>
                 {riderData && !showAllPoints
                     //@ts-ignore: We verify the rider level is in the map or we show 0
-                    ? <h4 className={styles.points}>{`Points: ${riderLevelToPointsMap.has(riderData.riderLevel as RiderLevels) ? rule.levelPointsMap[riderLevelToPointsMap.get(riderData.riderLevel)] : '0'}`}</h4>
+                    ? <h4 className={styles.points}>{`Points: ${riderLevelToPointsMap.has(riderData.riderLevel as RiderLevels) ? Number.parseInt(rule.levelPointsMap[riderLevelToPointsMap.get(riderData.riderLevel)]).toLocaleString() : '0'}`}</h4>
                     : (<div className={styles.pointsList}>{pointEntries.map(([k, v]) => <div key={k} className={styles.pointsListItem}>{`${k}: ${v}`}</div>)}</div>)
                 }
             </div>

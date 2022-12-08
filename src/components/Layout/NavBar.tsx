@@ -33,7 +33,7 @@ export const SteezyNavBar = () => {
                         </Navbar.Brand>
                     </Link>
                     <div className={styles.toggle}>
-                        <Navbar.Toggle aria-controls="responsive-navbar-nav"  ></Navbar.Toggle>
+                        <Navbar.Toggle aria-controls="responsive-navbar-nav" ></Navbar.Toggle>
                     </div>
                     {/* Put animated hamburger here */}
 

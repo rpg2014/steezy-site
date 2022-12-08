@@ -105,7 +105,7 @@ export const AddPointsForm = (props: {ruleIds?: string[]} ) => {
         }
         
         if(rulesThatFailValidation && rulesThatFailValidation.length > 0) {
-            throw new Error(`The following points have already been added during their time period: ${JSON.stringify(rulesThatFailValidation.map((rule: any) => {return {name: rule.name, timePeriod: rule.frequency, prevEarnedPoint: rule.prevEarnedDate}}))}`)
+            throw new Error(`Please fix the below validation errors`)
         }
         
         return Promise.all(rules.map(rule => {
@@ -178,19 +178,37 @@ export const AddPointsForm = (props: {ruleIds?: string[]} ) => {
                 {submitError && <Alert variant='danger'>{submitError.message}</Alert>}
                 {submitLoading && <Spinner size='sm' animation={'border'}/>}
                 {data && <Alert variant='success'>Points Added!</Alert>}
-                {!submitError && !submitLoading && !data && <Button  variant='success' onClick={executeCreatePoints}>
+                {/* @ts-ignore: this works*/}
+                {!submitError && !submitLoading && !data && <Button disabled={rulesThatFailValidation?.length > 0}  variant='success' onClick={executeCreatePoints}>
                         Submit
                     </Button>
                 }
             </div>
             {/*@ts-ignore: The below works*/}
             {rulesThatFailValidation?.length > 0 && 
-            <div className={styles.formInteractionContainer}>
-                <Alert variant='warning'>
-                    {`The following points have already been added during their time period: ${JSON.stringify(rulesThatFailValidation?.map((rule: any) => 
-                    {return {name: rule.name, timePeriod: rule.frequency, conflictingPoint: (rule.prevEarnedDate as DateTime).toJSDate().toLocaleDateString(undefined, {timeZone: "UTC"})}}))}`}
-                <br/>The new week starts on Mondays</Alert>
-                </div>
+                    <div className={styles.duplicateAlertContainer}>
+                        <Alert className={styles.duplicateAlert} variant='warning'>
+                            <>
+                                {`The following points have already been added during their time period:`}
+                                <br />
+                                <div className={styles.conflictingRule}>
+                                    <span >Rule Name</span>
+                                    <span >Conflicting Date</span>
+                                    <span >Rule Frequency</span>
+                                </div>
+                                <hr />
+                                {rulesThatFailValidation?.map((rule: any) => {
+                                    return <><div key={rule.id} className={styles.conflictingRule}>
+                                        <span >{rule.name}</span>
+                                        <span >{(rule.prevEarnedDate as DateTime).toJSDate().toLocaleDateString(undefined, { timeZone: "UTC" })}</span>
+                                        <span >{rule.frequency}</span>
+                                    </div><hr /></>
+                                })}
+                                <br />
+                                The new week starts on Mondays
+                            </>
+                        </Alert>
+                    </div>
             }
         </div>
         </>
@@ -201,5 +219,5 @@ export const AddPointsForm = (props: {ruleIds?: string[]} ) => {
 
 const DatePicker = (props: {value: Date, setValue: (d: Date)=> void}) => {
     //@ts-ignore: ignore valueAsDate, it works in most browsers
-    return <input className={styles.datePicker} type='date' placeholder={props.value.toISOString().substr(0,10)} value={props.value.toISOString().substr(0,10)} onInput={e=> props.setValue(e.target.valueAsDate)}></input>
+    return <input className={styles.datePicker} type='date' placeholder={props.value.toISOString().substring(0,10)} value={props.value.toISOString().substring(0,10)} onInput={e=> props.setValue(e.target.valueAsDate)}></input>
 }
