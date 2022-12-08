@@ -17,15 +17,14 @@ export const useSignedInRider = (): {riderData: Rider | undefined} => {
     useEffect(() => {
         if (signedIn && cognitoId ) {
             // console.log(`Query for: ${cognitoId}`)
-            subscription = DataStore.observeQuery(Rider, r => r.cognitoId('eq', cognitoId))
-                .subscribe(snapshot => {
+            DataStore.query(Rider, r => r.cognitoId('eq', cognitoId))
+                .then(snapshot => {
                     // console.log("in rider subscripton: "+JSON.stringify(snapshot))
-                    setRiderData(snapshot.items[0])
+                    setRiderData(snapshot[0])
                 })
-                return () => subscription.unsubscribe()
+                
         } else {
             setRiderData(undefined)
-            return () => subscription? subscription.unsubscribe() : null
         }
          
     }, [cognitoId, signedIn])

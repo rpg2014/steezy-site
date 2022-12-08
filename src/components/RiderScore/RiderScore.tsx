@@ -20,10 +20,10 @@ export const RiderScoreComponent = (props: {riderId?: string}) => {
     useEffect(()=> {
         let queryData = async () => {
             let allPoints = await DataStore.query(EarnedPoint);
-            setEarnedPoints(allPoints.filter(earnedPoint => earnedPoint.riderID === props.riderId))
+            setEarnedPoints(allPoints.filter(earnedPoint => earnedPoint.riderID === currentRider?.id).filter(earnedPoint => currentTimePeriod === "all" || new Date(earnedPoint.date).getMonth().toString() === currentTimePeriod))
         }
         queryData();
-    },[props.riderId])
+    },[currentRider])
 
     useEffect(()=> {
         let filter = async () => {
@@ -64,7 +64,7 @@ const PointsList= memo(function PointsList({points, riderLevel}: {points?: Earne
         return <>{"Loading "} <Spinner animation='border'/> </>
     }
     if(points.length === 0) {
-        return<>You dont have any points.</>
+        return<>You dont have any points. Try changing the time period.</>
     }
     points = points.sort((a,b)=> new Date(a.date).getTime() - new Date(b.date).getTime())
     let currentDate = new Date(points[0].date);

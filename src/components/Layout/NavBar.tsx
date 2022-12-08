@@ -2,6 +2,7 @@ import Link from "next/link"
 import React from "react"
 import { Button, Container, Nav, Navbar } from "react-bootstrap"
 import { useAuth } from "../../hooks/useAuth"
+import { useSignedInRider } from "../../hooks/useRider"
 import { SignInOutButton } from "../LoginComponents/LoginPopover"
 import styles from './NavBar.module.scss'
 import logo from '/public/blueBird.png' ;
@@ -13,7 +14,7 @@ export const SteezyNavBar = () => {
 
     //TODO Add toggle between sticky and fixed top navbar
 
-
+    const {riderData} = useSignedInRider();
     const { signedIn,isCommish } = useAuth();
     //have state to show offcanvas.  Have media query check to only open when below md breakpoint
     // https://www.w3schools.com/howto/howto_js_off-canvas.asp
@@ -47,6 +48,9 @@ export const SteezyNavBar = () => {
                             <Link passHref href="/rules">
                                 <Nav.Link className={styles.navButton}>Rules</Nav.Link>
                             </Link>
+                            {signedIn && <Link href={`/scores?riderId=${riderData?.id}`} passHref>
+                                <Nav.Link className={styles.navButton}>My Points</Nav.Link>
+                                </Link>}
                             {isCommish && <Link passHref href="/admin">
                                 <Nav.Link className={''+styles.navButton}>Admin</Nav.Link>
                             </Link>}

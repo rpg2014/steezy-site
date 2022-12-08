@@ -85,6 +85,17 @@
       }
   }
 
+  .cardSecondary {
+    @extend .card;
+      border: 1px solid $secondary;
+      &:hover,
+      &:focus,
+      &:active {
+          color: $secondary;
+          border-color: $secondary;
+      }
+  }
+
   
 .formContainer {
     background-color: $dark;

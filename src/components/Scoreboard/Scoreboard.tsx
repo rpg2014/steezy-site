@@ -50,7 +50,7 @@ export const ScoreboardList = () => {
 const RiderComp = (props: { rider: Rider, score?: number }) => {
     return (
     <div className={combineStyles(styles.rider, '')}> {/* styles.riderLink*/}
-        <Link passHref href={`/scores/${props.rider.id}`}>
+        <Link passHref href={`/scores?riderId=${props.rider.id}`}>
 
             <div className={styles.riderLink}>
                 {props.rider.name}

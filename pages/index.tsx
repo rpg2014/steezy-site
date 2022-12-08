@@ -37,7 +37,7 @@ const Home: NextPage = () => {
                 <h1 className={styles.title}>
                     Welcome to Steezy
                 </h1>
-                <h2>
+                <h2 style={{textAlign: "center"}}>
                     {season && `The ${season?.name} has started!`}
                 </h2>
                 <div className={styles.description}>
@@ -61,7 +61,7 @@ const Home: NextPage = () => {
                 <div className={styles.grid}>
                     {signedIn && isCommish &&
                         <Link passHref href='/admin'>
-                            <div className={styles.cardDanger}>
+                            <div className={styles.cardSecondary}>
 
                                 <h2>Admin Page &rarr;</h2>
                                 <p>Do admin actions like create a new rule</p>
@@ -78,6 +78,12 @@ const Home: NextPage = () => {
                         <div className={styles.card}>
                             <h2>Scoreboard &rarr;</h2>
                             <p>See the Seasons scores</p>
+                        </div>
+                    </Link>
+                    <Link href={`/scores?riderId=${riderData?.id}`} passHref>
+                        <div className={styles.card}>
+                            <h2>My Points &rarr;</h2>
+                            <p>See the points you've earned</p>
                         </div>
                     </Link>
 
