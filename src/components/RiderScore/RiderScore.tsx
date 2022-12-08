@@ -12,7 +12,6 @@ import styles from './RiderScore.module.scss'
 
 
 export const RiderScoreComponent = (props: {riderId?: string}) => {
-    //TODO: This line is causing a rerender, because the hook is changing I think its b/c rider id is changing?
     const {data: currentRider} = useSingleData(Rider, props.riderId)
     const [earnedPoints, setEarnedPoints] = useState<EarnedPoint[]>();
     const {scoresByRiderId, currentTimePeriod, setTimePeriod} = useRiderScores();
@@ -23,20 +22,7 @@ export const RiderScoreComponent = (props: {riderId?: string}) => {
             setEarnedPoints(allPoints.filter(earnedPoint => earnedPoint.riderID === currentRider?.id).filter(earnedPoint => currentTimePeriod === "all" || new Date(earnedPoint.date).getMonth().toString() === currentTimePeriod))
         }
         queryData();
-    },[currentRider])
-
-    useEffect(()=> {
-        let filter = async () => {
-            let allPoints = await DataStore.query(EarnedPoint);
-            let ridersPoints = allPoints.filter(earnedPoint => earnedPoint.riderID === props.riderId)
-            if(currentTimePeriod === "all") {
-                setEarnedPoints(ridersPoints);
-            }else {
-                setEarnedPoints(ridersPoints.filter(earnedPoint => new Date(earnedPoint.date).getMonth().toString() === currentTimePeriod))
-            }
-        }
-        filter()
-    },[currentTimePeriod])
+    },[currentRider, currentTimePeriod])
 
    
     if(!currentRider) {
