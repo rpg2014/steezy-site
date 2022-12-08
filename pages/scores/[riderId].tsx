@@ -18,7 +18,7 @@ const RiderScores: NextPage = () => {
     <Head>
         <title>Rider scores</title>
     </Head>
-        <RiderScoreComponent riderId={riderId!== undefined ?  Array.isArray(riderId) ? riderId[0] :riderId: undefined}/>
+        <RiderScoreComponent riderId={riderId !== undefined ?  Array.isArray(riderId) ? riderId[0] :riderId: undefined}/>
     
     </>
 }

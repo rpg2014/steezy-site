@@ -13,6 +13,8 @@ import { EarnedPoint, Rider, RiderLevels, Rule } from '../../models';
 import { combineStyles, riderLevelToPointsMap } from '../../utils/utils';
 import { RuleComponent } from '../Rules/Rule';
 import styles from './AddPointsForm.module.scss';
+import {DateTime } from 'luxon'
+
 
 
 //Maybe add button to go to rule when selectedRules is empty?
@@ -23,9 +25,70 @@ export const AddPointsForm = (props: {ruleIds?: string[]} ) => {
     const {data: rules} = useData(Rule, props.ruleIds)
 
     // const[selectedRules, setSelectedRules] = useState(props.ruleIds && data ? data : []);
-    const [date, setDate] = useState(new Date());
+    const [date, setDate] = useState(DateTime.utc());
     const {season, loading: seasonLoading} = useCurrentSeason();
 
+    const[rulesThatFailValidation, setRulesThatFailValidation] = useState<Rule[] | undefined>();
+
+
+    useEffect(()=> {
+        const validateRules = async () => {
+            if(!rules || rules.length === 0 || !riderData){
+                setRulesThatFailValidation(undefined);
+                return ;
+            }
+            // validation here that checks the users earned points for any of the same rules
+            // then makes sure that none of them are already added in the time period the rule requires.  
+            let newRulesThatFailValidation = []
+            for (let rule of rules){
+                // this function returns true if a given rule has already been earned within the frequency.  
+                let pointsFromSameRule = await DataStore.query(EarnedPoint, c => c.and(c => c.ruleID('eq',rule.id).and(c => c.riderID('eq', riderData?.id))))
+                let previousEarnedPointInSamePeriod = false;
+                let prevEarnedDate;
+                for (let earnedPoint of pointsFromSameRule){
+                    const earnedPointDate = DateTime.fromISO(earnedPoint.date)
+                    // console.log(`earned Point date: ${earnedPointDate.toISODate()}`)
+                    // console.log(`chosen date: ${date.toISODate()}`)
+                    switch (rule.frequency) {
+                        case "SEASON": 
+                            if(earnedPoint.seasonID === season?.id) {
+                                previousEarnedPointInSamePeriod = true;
+                                prevEarnedDate = earnedPointDate
+                            }
+                            break;
+                        case "MONTH":
+                            if(date.month === earnedPointDate.month){
+                                previousEarnedPointInSamePeriod = true;
+                                prevEarnedDate = earnedPointDate
+                            }
+                            break;
+                        case "WEEK": 
+                            if(date.weekNumber === earnedPointDate.weekNumber){
+                                // console.log("setting to true")
+                                previousEarnedPointInSamePeriod = true;
+                                prevEarnedDate = earnedPointDate
+                            }
+                            break;
+                        case "DAY":
+                            // test day equality
+                            if(date.day === earnedPointDate.day && date.month === earnedPointDate.month && date.year === earnedPointDate.year){
+                                previousEarnedPointInSamePeriod = true;
+                                prevEarnedDate = earnedPointDate
+                            }
+                            break;
+                        case "ANYTIME":
+                            // false by default
+                            break;
+                    }
+                }   
+                if(previousEarnedPointInSamePeriod) {
+                    newRulesThatFailValidation.push({...rule, prevEarnedDate: prevEarnedDate});
+                }
+            }
+            setRulesThatFailValidation(newRulesThatFailValidation)
+        }
+        validateRules()
+    }, [props.ruleIds, date, season, riderData, rules])
     
 
 
@@ -40,12 +103,14 @@ export const AddPointsForm = (props: {ruleIds?: string[]} ) => {
         if(!season){
             throw new Error("There isn't an active season")
         }
-
         
+        if(rulesThatFailValidation && rulesThatFailValidation.length > 0) {
+            throw new Error(`The following points have already been added during their time period: ${JSON.stringify(rulesThatFailValidation.map((rule: any) => {return {name: rule.name, timePeriod: rule.frequency, prevEarnedPoint: rule.prevEarnedDate}}))}`)
+        }
         
         return Promise.all(rules.map(rule => {
             const pointProps = {
-                date: date.toISOString().substring(0,10),
+                date: date.toJSDate().toISOString().substring(0,10),
                 riderID: riderData.id,
                 ruleID: rule.id,
                 seasonID: season.id,
@@ -73,10 +138,9 @@ export const AddPointsForm = (props: {ruleIds?: string[]} ) => {
                        Add Points
             </div>
             <div className={styles.formSectionTitle}>
-                Date of Points
-                
+                Date of Points 
             </div>
-            <DatePicker value={date} setValue={v=>setDate(v)} />
+            <DatePicker value={date.toJSDate()} setValue={v=>setDate(DateTime.fromJSDate(v,{zone: "UTC"}))} />
             
                 <div className={styles.formSectionTitle}>
                     Points to add
@@ -119,6 +183,15 @@ export const AddPointsForm = (props: {ruleIds?: string[]} ) => {
                     </Button>
                 }
             </div>
+            {/*@ts-ignore: The below works*/}
+            {rulesThatFailValidation?.length > 0 && 
+            <div className={styles.formInteractionContainer}>
+                <Alert variant='warning'>
+                    {`The following points have already been added during their time period: ${JSON.stringify(rulesThatFailValidation?.map((rule: any) => 
+                    {return {name: rule.name, timePeriod: rule.frequency, conflictingPoint: (rule.prevEarnedDate as DateTime).toJSDate().toLocaleDateString(undefined, {timeZone: "UTC"})}}))}`}
+                <br/>The new week starts on Mondays</Alert>
+                </div>
+            }
         </div>
         </>
     )

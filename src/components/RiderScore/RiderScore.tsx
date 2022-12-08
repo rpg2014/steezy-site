@@ -1,7 +1,7 @@
 import { DataStore } from "aws-amplify";
 import { useState, useEffect, ReactNode, memo, useMemo } from "react";
 import { Spinner } from "react-bootstrap";
-import { useData } from "../../hooks/useData";
+import { useData, useSingleData } from "../../hooks/useData";
 import { useRiderScores } from "../../hooks/useRuleScores";
 import { Rider, EarnedPoint, Rule, RiderLevels } from "../../models";
 import { combineStyles, getPoints, riderLevelToPointsMap } from "../../utils/utils";
@@ -13,7 +13,7 @@ import styles from './RiderScore.module.scss'
 
 export const RiderScoreComponent = (props: {riderId?: string}) => {
     //TODO: This line is causing a rerender, because the hook is changing I think its b/c rider id is changing?
-    const {data: rider} = useData(Rider, props.riderId? [props.riderId] : undefined)
+    const {data: currentRider} = useSingleData(Rider, props.riderId)
     const [earnedPoints, setEarnedPoints] = useState<EarnedPoint[]>();
     const {scoresByRiderId, currentTimePeriod, setTimePeriod} = useRiderScores();
     
@@ -27,7 +27,6 @@ export const RiderScoreComponent = (props: {riderId?: string}) => {
 
     useEffect(()=> {
         let filter = async () => {
-            
             let allPoints = await DataStore.query(EarnedPoint);
             let ridersPoints = allPoints.filter(earnedPoint => earnedPoint.riderID === props.riderId)
             if(currentTimePeriod === "all") {
@@ -40,14 +39,10 @@ export const RiderScoreComponent = (props: {riderId?: string}) => {
     },[currentTimePeriod])
 
    
-    if(!rider) {
-        return <>Select a Rider [enter list]</>
-    }
-    if(rider.length > 1) {
-        return <>Somethings wrong</>
+    if(!currentRider) {
+        return <>This shouldn't happen, we might be loading</>
     }
     
-    const currentRider = rider[0];
     
 
     
@@ -56,8 +51,7 @@ export const RiderScoreComponent = (props: {riderId?: string}) => {
     <div className={combineStyles(styles.formContainer, styles.container)}>
         <h1 className={styles.scoreboardContainer}>{currentRider.name}'s Scores</h1>
         <TimePeriodSelector currentTimePeriod={currentTimePeriod} setTimePeriod={setTimePeriod} />
-        <p>Total Score: {scoresByRiderId?.get(currentRider.id)}</p>
-        <p>There is an infinite loop on this page, which will use up your battery if you leave this open</p>
+        <p>Total Score for period: {scoresByRiderId?.get(currentRider.id)}</p>
         <div className={combineStyles(styles.container, styles.pointList)}>
             <PointsList  points={earnedPoints} riderLevel ={currentRider.riderLevel} />
         </div>
@@ -72,16 +66,17 @@ const PointsList= memo(function PointsList({points, riderLevel}: {points?: Earne
     if(points.length === 0) {
         return<>You dont have any points.</>
     }
+    points = points.sort((a,b)=> new Date(a.date).getTime() - new Date(b.date).getTime())
     let currentDate = new Date(points[0].date);
     let list = [];
     
     list.push(<div className={styles.dateHeader} >{new Date(points[0].date).toLocaleDateString(undefined, {timeZone: "UTC"})}</div>)
     for (let point of points) {
-        console.log(point.date)
+    
         const pointDate = new Date(point.date)
         if(currentDate.getTime() !== pointDate.getTime()){
             currentDate = pointDate;
-            list.push(<div className={styles.dateHeader} >{pointDate.toLocaleDateString(undefined, {timeZone: "UTC"})}</div>)
+            list.push(<div key={pointDate.toLocaleDateString(undefined, {timeZone: 'UTC'})} className={styles.dateHeader} >{pointDate.toLocaleDateString(undefined, {timeZone: "UTC"})}</div>)
         } 
         
         list.push(<PointComponent key={point.id} earnedPoint={point} riderLevel={riderLevel}/>)
@@ -93,11 +88,10 @@ const PointsList= memo(function PointsList({points, riderLevel}: {points?: Earne
 
 const PointComponent = memo(function PointComponent({earnedPoint, riderLevel}: {earnedPoint: EarnedPoint, riderLevel: RiderLevels | keyof typeof RiderLevels}) {
     
-    const {data} = useData(Rule, Array.of(earnedPoint.ruleID) )
-    if(!data){
+    const {data: rule} = useSingleData(Rule, earnedPoint.ruleID )
+    if(!rule){
         return <>Loading</>
     }
-    const rule = data[0]
     return <div key={earnedPoint.ruleID} className={styles.pointContainer}>
         <div className={styles.ruleName}>
             

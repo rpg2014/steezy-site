@@ -48,12 +48,14 @@ export const ScoreboardList = () => {
 
 
 const RiderComp = (props: { rider: Rider, score?: number }) => {
-    return (<div className={combineStyles(styles.rider, '')}> {/* styles.riderLink*/}
-        {/* <Link href={`/scores/${props.rider.id}`}> */}
-            <div>
-            {props.rider.name}
+    return (
+    <div className={combineStyles(styles.rider, '')}> {/* styles.riderLink*/}
+        <Link passHref href={`/scores/${props.rider.id}`}>
+
+            <div className={styles.riderLink}>
+                {props.rider.name}
             </div>
-        {/* </Link> */}
+        </Link>
         <div className={styles.totalPoints}>
             Points: {props.score ? props.score.toLocaleString() : 0}
         </div>

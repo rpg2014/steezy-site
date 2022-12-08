@@ -27,6 +27,21 @@ export const useData =<T extends PersistentModel>(type: PersistentModelConstruct
     return {data}
 }
 
+
+export const useSingleData = <T extends PersistentModel>(type: PersistentModelConstructor<T>, id?: string) =>{
+    const [data, setData] = useState<T>();
+    useEffect(()=>{
+        const queryData = async () => {
+            if(id){
+                const queriedData = await DataStore.query(type, id)
+                setData(queriedData)
+            }
+        }
+        queryData()
+    },[type, id])
+    return {data}
+}
+
 export const useUpdatingData=<T extends PersistentModel>(type: PersistentModelConstructor<T>) => {
     const [data, setData] = useState<T[]>();
     const [isSynced, setIsSynced] = useState<boolean>(false);

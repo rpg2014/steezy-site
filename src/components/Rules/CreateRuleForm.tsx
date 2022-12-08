@@ -211,7 +211,6 @@ export const CreateRuleForm = ({ ruleId }: { ruleId?: string | null }) => {
                             <>
                                 <InputGroup label='Points for all levels' name="points" setFormState={(fn: (state: any) => any)=> {
                                     const newValues= fn({})
-                                    console.log(JSON.stringify(newValues))
                                     setFormState({
                                         ...formState,
                                         greenPoints: newValues.points,
