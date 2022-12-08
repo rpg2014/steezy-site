@@ -81,7 +81,9 @@ export const useProvideRiderScores = () => {
     }
 
     useEffect(()=> {
-        setTimePeriod(localStorage.getItem('steezy_selected_time_period') as TimePeriod)
+        if(localStorage && localStorage.getItem('steezy_selected_time_period') !== null){
+            setTimePeriod(localStorage.getItem('steezy_selected_time_period') as TimePeriod)
+        }
     },[])
 
     useEffect(()=> {
