@@ -26,4 +26,4 @@ export const getPoints = (levelPointsMap: any, riderLevel: RiderLevels | keyof t
 
 
 
-export const tagOptions = [undefined, "ACTION", "STEVENS_RUN", "WHISTLER_RUN"];
+export const tagOptions = [undefined, "ACTION", "STEVENS_RUN", "WHISTLER_RUN", "JERRY"];
