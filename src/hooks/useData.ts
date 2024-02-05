@@ -33,6 +33,7 @@ export const useSingleData = <T extends PersistentModel>(type: PersistentModelCo
     useEffect(()=>{
         const queryData = async () => {
             if(id){
+                //@ts-ignore: testing this 
                 const queriedData = await DataStore.query(type, id)
                 setData(queriedData)
             }
